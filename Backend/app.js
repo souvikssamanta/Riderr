@@ -13,7 +13,7 @@ connectToDb();
 app.use(
   cors({
 origin:process.env.FRONTEND_URL,
-crediantials:true,
+credentials:true,
 methods:['GET','POST'],
 allowedHeaders:['Content-Type','Authorization'],
 
@@ -24,7 +24,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 app.get("/", (req, res) => {
-  
+  res.send("Welcome to the Ride Sharing APP");
 });
 app.use("/users", userRoutes);
 app.use("/captains", captainRoutes);
