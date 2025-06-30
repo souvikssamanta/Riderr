@@ -233,7 +233,7 @@ function Home() {
       setPannelOpen(false);
       setTransport(true);
       const response = await axios.get(
-        `${import.meta.env.VITE_BASE_URL}/rides/get-fare`,
+        `${import.meta.env.VITE_BACKEND_URL}/rides/get-fare`,
         {
           params: {
             pickup: pickup,
@@ -264,7 +264,7 @@ function Home() {
 
     try {
       const response = await axios.post(
-        `${import.meta.env.VITE_BASE_URL}/rides/create`,
+        `${import.meta.env.VITE_BACKEND_URL}/rides/create`,
         {
           pickup,
           destination,
