@@ -16,13 +16,11 @@ origin:process.env.FRONTEND_URL,
 credentials:true,
 methods:['GET','POST'],
 allowedHeaders:['Content-Type','Authorization'],
-
-
   })
 );
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use(cookieParser());
+app.use(cookieParser()); 
 app.get("/", (req, res) => {
   res.send("Welcome to the Ride Sharing APP");
 });
