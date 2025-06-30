@@ -8,7 +8,7 @@ function SocketProvider({ children }) {
 
   useEffect(() => {
     // Initialize the socket connection
-    const newSocket = io(`${import.meta.env.VITE_BASE_URL}`); // Replace with your server URL
+    const newSocket = io(`${import.meta.env.VITE_BACKEND_URL}`); // Replace with your server URL
     setSocket(newSocket);
 
     // Log connection and disconnection events
