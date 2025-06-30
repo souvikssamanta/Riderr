@@ -7,8 +7,11 @@ let io;
 function initializeSocket(server) {
   io = new Server(server, {
     cors: {
-      origin: "*", // Adjust this to your frontend's origin
+      origin: process.env.FRONTEND_URL, // Adjust this to your frontend's origin
       methods: ["GET", "POST"],
+      credentials: true, // Allow credentials to be sent
+      allowedHeaders: ["Content-Type", "Authorization"],
+
     },
   });
 
