@@ -5,17 +5,18 @@ const ConfirmRidepopup = (props) => {
 const [otp,setOtp]=useState("");
 const navigate = useNavigate();
 const submitHandler=async(e)=>{
-const url = "https://uber-ouze.onrender.com";
+
 e.preventDefault()
 
-const response=await axios.get(`${url}/rides/start-ride`,{
-  params:{rideId: props.ride?._id,
-  otp:otp,
-  },
-  headers:{
-    Authorization:`Bearer ${localStorage.getItem("token")}`,
-  },
-})
+const response = await axios.get(
+  `${import.meta.env.VITE_BACKEND_URL}/rides/start-ride`,
+  {
+    params: { rideId: props.ride?._id, otp: otp },
+    headers: {
+      Authorization: `Bearer ${localStorage.getItem("token")}`,
+    },
+  }
+);
 
 if(response.request.status===200){  
 props.setConfirmridepopup(false);
