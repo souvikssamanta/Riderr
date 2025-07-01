@@ -26,7 +26,13 @@ const user =await userService.createUser({
 
 })
 const token=user.generateAuthtoken();
-res.status(201).json({token,user})
+res.cookie("token",token,{
+    httpOnly:true,
+    sameSite:"none",
+    secure:true,
+    maxAge:7*24*3600*1000
+})
+return res.status(201).json({token,user})
 
 } 
 //---login---
@@ -47,7 +53,12 @@ if(!isMatch){
     return res.status(401).json({errors:"invalid email or password"})
 }
 const token=user.generateAuthtoken();
-res.cookie('token',token)
+res.cookie("token", token, {
+  httpOnly: true,
+  sameSite: "none",
+secure:true,
+  maxAge: 7 * 24 * 3600 * 1000,
+});
  res.status(200).json({token,user})
 }
 //---profile----
