@@ -33,7 +33,7 @@ if(response.status === 200){
   setUser(data.user)
   localStorage.setItem('token',data.token)
   toast.success("loggedin sucessfully");
-navigate('/home')
+  navigate('/home')
 
 }
 }catch(error){

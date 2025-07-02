@@ -56,14 +56,14 @@ const token=user.generateAuthtoken();
 res.cookie("token", token, {
   httpOnly: true,
   sameSite: "none",
-secure:true,
+  secure:true,
   maxAge: 7 * 24 * 3600 * 1000,
 });
- res.status(200).json({token,user})
+return res.status(200).json({token,user})
 }
 //---profile----
 module.exports.getProfile=async (req,res,next)=>{
-res.status(200).json(req.user)
+  res.status(200).json(req.user)
 
     
 }
