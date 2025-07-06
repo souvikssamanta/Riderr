@@ -142,7 +142,7 @@ setEmail('')
 
           <p className="mt-6 text-sm font-medium">
             Already have an account?
-            <Link to="/signup" className="text-blue-800 ml-3">
+            <Link to="/login" className="text-blue-800 ml-3">
               Log in
             </Link>
           </p>
