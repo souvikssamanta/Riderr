@@ -147,6 +147,13 @@ setEmail('')
             </Link>
           </p>
         </form>
+          <p className="mt-6 text-lg  font-medium">
+                  
+                    <Link to='/logout'
+                     className="text-orange-500">
+                      Logout
+                    </Link>
+                  </p>
       </div>
     </div>
   );
