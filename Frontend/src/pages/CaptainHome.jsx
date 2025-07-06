@@ -147,11 +147,11 @@ function CaptainHome() {
         </Link>
       </div>
       {/* ----image section-- */}
-      <div className="h-1/2">
+      <div className="h-1/3">
         <LiveTracking></LiveTracking>
       </div>
 
-      <div className="h-1/2 fixed  w-full rounded-t-xl  ">
+      <div className="h-2/3 fixed  w-full rounded-t-xl  ">
         <div ref={captaidetailsref} className=" h-full ">
           <CaptainDetails></CaptainDetails>
         </div>
@@ -179,7 +179,7 @@ function CaptainHome() {
         {/* confirmridepopup */}
         <div
           ref={confirmridepopupref}
-          className="h-0 flex flex-row bg-white absolute w-full bottom-0"
+          className="h-0 flex flex-row opacity-0 bg-white absolute w-full bottom-0"
         >
           <ConfirmRidepopup
             ride={ride}
