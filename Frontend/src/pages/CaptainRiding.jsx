@@ -7,7 +7,7 @@ import axios from 'axios'
 import gsap from 'gsap'
 import LiveTracking from '../components/LiveTracking'
 import Payment from './Payment'
- 
+ import { toast } from 'react-hot-toast'
 const CaptainRiding = () => {
 
     const [ finishRidePanel, setFinishRidePanel ] = useState(false)
@@ -45,8 +45,8 @@ const response = await axios.post(
   }
 );
 if(response.request.status===200){  
-    
-     navigate('/captain-home',)
+     toast.success("Ride finished sucessfully");
+     navigate('/captain-login',)
     }
 }
 
