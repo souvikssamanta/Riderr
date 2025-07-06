@@ -73,7 +73,7 @@ function CaptainHome() {
      setConfirmridepopup(true);
   }
 
-  const [ridepopup, setRidepopup] = useState(true);
+  const [ridepopup, setRidepopup] = useState(false);
   const [confirmridepopup, setConfirmridepopup] = useState(false);
   const ridepopupref = useRef(null);
   const confirmridepopupref = useRef(null);
