@@ -152,6 +152,7 @@ setEmail('')
             Logout
           </Link>
         </span>
+        </div>
     </div>
   );
 }
