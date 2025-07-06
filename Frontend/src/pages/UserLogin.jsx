@@ -117,7 +117,11 @@ setPassword('')
             </Link>
           </p>
         </form>
-        
+         <span className="ml-25 text-lg px-2 py-2 bg-amber-200 rounded-2xl font-medium">
+          <Link to="/logout" className="text-orange-500">
+            Logout
+          </Link>
+        </span>
       </div>
     </div>
   );
