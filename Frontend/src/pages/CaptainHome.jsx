@@ -77,6 +77,8 @@ function CaptainHome() {
   const [confirmridepopup, setConfirmridepopup] = useState(false);
   const ridepopupref = useRef(null);
   const confirmridepopupref = useRef(null);
+  const captaidetailsref = useRef(null);
+
 
   // ----popup pannel----
   useGSAP(
@@ -96,6 +98,28 @@ function CaptainHome() {
     [ridepopup]
   );
 
+ useGSAP(
+    function () {
+      if (ridepopup) {
+        gsap.to(captaidetailsref.current, {
+          height: "0%",
+          opacity: 0,
+        });
+      } else {
+        gsap.to(captaidetailsref.current, {
+          height: "100%",
+          opacity: 1,
+        });
+      }
+    },
+    [ridepopup]
+  );
+
+
+
+
+
+  
   //confirmpopup
   useGSAP(
     function () {
@@ -128,7 +152,7 @@ function CaptainHome() {
       </div>
 
       <div className="h-1/2 fixed  w-full rounded-t-xl  ">
-        <div className=" h-full hidden">
+        <div ref={captaidetailsref} className=" h-full ">
           <CaptainDetails></CaptainDetails>
         </div>
         {/* ridepopup */}
