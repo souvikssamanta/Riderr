@@ -10,7 +10,7 @@ import ConfirmRidepopup from "../components/ConfirmRidepopup";
 import { SocketContext } from "../context/SocketContext";
 import { CaptainDataContext } from "../context/CaptainContext";
 import LiveTracking from "../components/LiveTracking";
-
+import { toast } from "react-hot-toast";
 function CaptainHome() {
   const [socket] = useContext(SocketContext);
   const {captain} = useContext(CaptainDataContext);
@@ -68,7 +68,7 @@ function CaptainHome() {
         },
       }
     );
-    alert("Ride confirmed successfully!");
+    toast.success("Ride confirmed successfully");
      setRidepopup(false);
      setConfirmridepopup(true);
   }
