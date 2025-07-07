@@ -68,9 +68,10 @@ function CaptainHome() {
         },
       }
     );
-    toast.success("Ride confirmed successfully");
+   
      setRidepopup(false);
      setConfirmridepopup(true);
+     toast.success("Ride confirmed successfully");
   }
 
   const [ridepopup, setRidepopup] = useState(false);
