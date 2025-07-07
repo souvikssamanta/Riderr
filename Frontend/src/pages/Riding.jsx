@@ -6,16 +6,86 @@ import { useNavigate } from 'react-router-dom'
 import { SocketContext } from '../context/SocketContext'
 import {useContext} from 'react'
 import LiveTracking from '../components/LiveTracking'
-import Payment from './Payment'
+import axios from "axios";
+
 const Riding = () => {
   const navigate=useNavigate()
   const [socket] = useContext(SocketContext);
   const location=useLocation();
   const {ride}=location.state
+const initPay = (order) => {
+    const options = {
+      key: import.meta.env.VITE_RAZORPAY_KEY_ID,
+      amount: order.amount,
+      currency: order.currency,
+      name: "User Payment",
+      order_id: order.id,
+      handler:async function (response) {
+        console.log("Payment successful", response);
+        const data =await axios.post(
+          `${import.meta.env.VITE_BACKEND_URL}/pay/verification`,
+          {
+            razorpay_payment_id: response.razorpay_payment_id,
+            razorpay_order_id: response.razorpay_order_id,
+            razorpay_signature: response.razorpay_signature, // changed from 'fare' to 'amount'
+          },
+          {
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem("token")}`,
+            },
+          }
+        );
+        console.log("Payment verification response", data);
+        if(data.status==200){
+          window.location.href = `${import.meta.env.VITE_FRONTEND_URL}/success?reference=${response.razorpay_payment_id}`;
+          
+        }
+        else{
+          window.location.href = `${
+            import.meta.env.VITE_FRONTEND_URL
+          }/fail?reference=${response.razorpay_payment_id}`;
+        }
 
-// socket.on("ride-finished", (ride) => {
-//   navigate("/home");
-// });
+      },
+    
+      prefill: {
+        email: "abcd@gmail.com",
+      },
+      theme: {
+        color: "#3399cc",
+      },
+    };
+  
+    
+
+    const rzp = new window.Razorpay(options);
+    rzp.open();
+  };
+
+  const handlePayment = async (fare) => {
+    const responseRazorpay = await axios.post(
+      `${import.meta.env.VITE_BACKEND_URL}/pay/payment`,
+      {
+        amount: fare, // changed from 'fare' to 'amount'
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+      }
+    );
+    if (responseRazorpay.data.success) {
+      console.log(responseRazorpay.data.order);
+      initPay(responseRazorpay.data.order);
+     
+    }
+    else {
+      console.error("Payment initialization failed");
+      alert("Payment initialization failed. Please try again.");
+    }
+  };
+
+
   return (
     <div className="h-screen">
       <Link
