@@ -120,17 +120,15 @@ const initPay = (order) => {
             cash
           </Link>
 
-          <Link
-            to="/payment"
+          <button
+             onClick={() => handlePayment(ride.fare)}
             className="bg-green-500 py-1 text-xl w-30 text-center rounded-xl "
           >
             online
-          </Link>
+          </button>
         </div>
       </div>
-      <div className='h-0'>
-        <Payment fare={ride.fare}></Payment>
-      </div>
+      
     </div>
   );
 }
