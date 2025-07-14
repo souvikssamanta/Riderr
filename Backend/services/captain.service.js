@@ -1,8 +1,8 @@
 const captainModel=require('../models/captain.model');
 module.exports.createCaptain= ({
-    firstname,lastname,email,password,color,plate,capacity,vehicleType
+    firstname,lastname,email,password,contact,plate,License,vehicleType
 })=>{
-if(!firstname ||!email || !password || !color || !plate || !capacity || !vehicleType){
+if(!firstname ||!email || !password || !contact || !plate  || !vehicleType){
     throw new Error('all fields are required');
 }
 const captain = captainModel.create({
@@ -12,10 +12,10 @@ const captain = captainModel.create({
     },
     email,
     password,
+    contact,
     vehicle:{
-        color,
+        License,
         plate,
-        capacity,
         vehicleType
     }
 
