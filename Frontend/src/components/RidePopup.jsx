@@ -1,80 +1,125 @@
-import React from 'react'
-const RidePopup = (props) => {
+
+
+
+import React from "react";
+import { motion } from "framer-motion";
+import {
+  FaCheck,
+  FaTimes,
+  FaUserFriends,
+  FaMapMarkerAlt,
+  FaMoneyBillWave,
+} from "react-icons/fa";
+
+const RidePopup = ({
+  setRidepopup,
+  ride,
+  confirmRide,
+  setConfirmridepopup,
+}) => {
   return (
-    <div className=" px-3  w-80 py-1 h-">
-      {/* ----all data--- */}
-      <div className="flex flex-col px-2 py-1 gap-1">
-        <h1
-          onClick={() => {
-            props.setRidepopup(false);
-          }}
-          className="text-xl text-fuchsia-800 text-center  font-semibold mt-1"
-        >
-          Here your ride!
-        </h1>
+    <motion.div
+      initial={{ opacity: 0, scale: 0.9 }}
+      animate={{ opacity: 1, scale: 1 }}
+      exit={{ opacity: 0, scale: 0.9 }}
+      transition={{ type: "spring", damping: 20 }}
+      className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50 p-4"
+    >
+      <motion.div
+        className="bg-white rounded-xl shadow-2xl max-w-md w-full overflow-hidden"
+        initial={{ y: 50 }}
+        animate={{ y: 0 }}
+      >
+        {/* Header */}
+        <div className="bg-gradient-to-r from-fuchsia-600 to-amber-500 p-4 text-white">
+          <h2 className="text-xl font-bold text-center">New Ride Request!</h2>
+        </div>
 
-        {/* pickup location and destination */}
+        {/* Content */}
+        <div className="p-6 space-y-4">
+          {/* Location Info */}
+          <div className="space-y-3">
+            <div className="flex items-start gap-3">
+              <FaMapMarkerAlt className="text-fuchsia-600 mt-1 text-lg" />
+              <div>
+                <p className="text-sm font-medium text-gray-500">
+                  Pickup Location
+                </p>
+                <p className="font-semibold text-gray-800">
+                  {ride?.pickup || "Not specified"}
+                </p>
+              </div>
+            </div>
 
-        <div className="flex-row px-2">
-          <div>
-            <p className="text-xl text-fuchsia-800">Pickup location</p>
-            <p className="text-md bg-amber-100 inline-block rounded-3xl px-3 py-1 font-bold mt-1">
-              {props.ride?.pickup}
-            </p>
+            <div className="flex items-start gap-3">
+              <FaMapMarkerAlt className="text-amber-500 mt-1 text-lg" />
+              <div>
+                <p className="text-sm font-medium text-gray-500">Destination</p>
+                <p className="font-semibold text-gray-800">
+                  {ride?.destination || "Not specified"}
+                </p>
+              </div>
+            </div>
           </div>
 
-          <div className="mt-1">
-            <p className="text-xl text-fuchsia-800 ">Destination</p>
-            <p className="text-md bg-amber-100 inline-block rounded-3xl px-3 font-bold mt-1">
-              {props.ride?.destination}
-            </p>
+          {/* Fare and Passengers */}
+          <div className="flex gap-6 pt-2">
+            <div className="flex items-center gap-2">
+              <FaMoneyBillWave className="text-green-500 text-xl" />
+              <div>
+                <p className="text-sm text-gray-500">Fare</p>
+                <p className="font-bold text-gray-800">₹{ride?.fare || "--"}</p>
+              </div>
+            </div>
+
+            <div className="flex items-center gap-2">
+              <FaUserFriends className="text-blue-500 text-xl" />
+              <div>
+                <p className="text-sm text-gray-500">Passengers</p>
+                <p className="font-bold text-gray-800">2</p>
+              </div>
+            </div>
           </div>
         </div>
 
-        {/* -----fare and passengers---- */}
-        <div className="flex gap-35 px-2">
-          <div>
-            <h1 className="text-xl text-fuchsia-800">Fare</h1>
-            <p className="text-md bg-amber-100 inline-block rounded-3xl px-1 font-bold mt-1">
-              {props.ride?.fare}
-            </p>
-          </div>
-          <div>
-            <h1 className="text-xl text-fuchsia-800">Passenger</h1>
-            <p className="text-md bg-amber-100 inline-block rounded-3xl px-3 font-bold mt-2">
-              2
-            </p>
-          </div>
-        </div>
-        {/* -----buttons------ */}
-        <div className="flex mt-1 justify-between">
+        {/* Action Buttons */}
+        <div className="flex border-t border-gray-200">
           <button
             onClick={() => {
-              props.confirmRide();
-              props.setConfirmridepopup(true);
-              //props.setRidepopup(false);
+              setRidepopup(false);
             }}
-            className="bg-green-500 text-black
-            hover:bg-emerald-400 px-2 py-2 text-md rounded"
+            className="flex-1 flex items-center justify-center gap-2 py-3 text-red-500 font-medium hover:bg-red-50 transition-colors"
           >
-            Accept
+            <FaTimes /> Ignore
           </button>
-
+          <div className="w-px bg-gray-200"></div>
           <button
             onClick={() => {
-              props.setRidepopup(false);
+              confirmRide();
+              setConfirmridepopup(true);
             }}
-            className="bg-red-600
-            hover:bg-red-500 text-white px-2  text-md rounded
-            
-          "
+            className="flex-1 flex items-center justify-center gap-2 py-3 bg-gradient-to-r from-fuchsia-600 to-amber-500 text-white font-medium hover:opacity-90 transition-opacity"
           >
-            Ignore
+            <FaCheck /> Accept
           </button>
         </div>
-      </div>
-    </div>
+      </motion.div>
+    </motion.div>
   );
-}
+};
 
-export default RidePopup
+export default RidePopup;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
