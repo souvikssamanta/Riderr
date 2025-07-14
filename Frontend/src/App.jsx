@@ -15,7 +15,7 @@ import Riding from "./pages/Riding";
 import CaptainRiding from "./pages/CaptainRiding";
 import Failure from './pages/failure';
 import Success from './pages/success'
-import Payment from "./pages/Payment";
+//import Payment from "./pages/Payment";
 const App = () => {
   return (
     <div>
@@ -27,9 +27,9 @@ const App = () => {
         <Route path="/signup" element={<UserSignup />} />
         <Route path="/captain-login" element={<CaptainLogin />} />
         <Route path="/captain-signup" element={<CaptainSignup />} />
-        <Route path="/failure" element={<Failure />} />
+        <Route path="/fail" element={<Failure />} />
         <Route path="/success" element={<Success />} />
-        <Route path="/payment" element={<Payment/>} />
+
         <Route
           path="/home"
           element={

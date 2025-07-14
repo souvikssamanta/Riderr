@@ -37,8 +37,13 @@ const captainSchema = new mongoose.Schema({
     enum: ["active", "inactive"],
     default: "inactive",
   },
+  contact: {
+    type: Number,
+    required: true,
+    min: [10, "Capacity must be at least 10"],
+  },
   vehicle: {
-    color: {
+    License: {
       type: String,
       required: true,
       minlength: [3, "Color must be at least 3 characters long"],
@@ -48,11 +53,7 @@ const captainSchema = new mongoose.Schema({
       required: true,
       minlength: [3, "Plate must be at least 3 characters long"],
     },
-    capacity: {
-      type: Number,
-      required: true,
-      min: [1, "Capacity must be at least 1"],
-    },
+
     vehicleType: {
       type: String,
       required: true,
@@ -68,7 +69,7 @@ const captainSchema = new mongoose.Schema({
       type: Number,
     },
     lng: {
-      type:Number,
+      type: Number,
     },
   },
 });

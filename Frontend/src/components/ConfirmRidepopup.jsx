@@ -1,88 +1,156 @@
-import React, { useState } from 'react'
-import { Link, useNavigate } from 'react-router-dom';
-import axios from 'axios';
-const ConfirmRidepopup = (props) => {
-const [otp,setOtp]=useState("");
-const navigate = useNavigate();
-const submitHandler=async(e)=>{
 
-e.preventDefault()
 
-const response = await axios.get(
-  `${import.meta.env.VITE_BACKEND_URL}/rides/start-ride`,
-  {
-    params: { rideId: props.ride?._id, otp: otp },
-    headers: {
-      Authorization: `Bearer ${localStorage.getItem("token")}`,
-    },
-  }
-);
+import React, { useState } from "react";
+import { motion } from "framer-motion";
+import { useNavigate } from "react-router-dom";
+import axios from "axios";
+import {
+  FaCheck,
+  FaTimes,
+  FaMoneyBillWave,
+  FaUserFriends,
+  FaKey,
+} from "react-icons/fa";
 
-if(response.request.status===200){  
-props.setConfirmridepopup(false);
-props.setRidepopup(false);
- navigate('/captain-riding',{state:{ride:props.ride}})
-}
+const ConfirmRidepopup = ({
+  setConfirmridepopup,
+  setConfirmride,
+  setRidepopup,
+  ride,
+}) => {
+  const [otp, setOtp] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+  const navigate = useNavigate();
 
-}
+  const submitHandler = async (e) => {
+    e.preventDefault();
+    setIsLoading(true);
+
+    try {
+      const response = await axios.get(
+        `${import.meta.env.VITE_BACKEND_URL}/rides/start-ride`,
+        {
+          params: { rideId: ride?._id, otp: otp },
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        }
+      );
+
+      if (response.request.status === 200) {
+        setConfirmridepopup(false);
+        setRidepopup(false);
+        navigate("/captain-riding", { state: { ride: ride } });
+      }
+    } catch (error) {
+      console.error("Error confirming ride:", error);
+      // Handle error (show toast message, etc.)
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   return (
-    <div className="    py-1 h-full min-w-80">
-      {/* ----all data--- */}
-      <div className=" flex flex-col gap-5 px-4 py-1 ">
-        <h1
-          onClick={() => {
-            props.setRidepopup(false);
-          }}
-          className="text-xl  text-center font-semibold mt-5"
-        >
-          Confirm your ride!
-        </h1>
-        
-
-        {/* -----fare and passengers---- */}
-        <div className="flex ring-2 rounded-xl py-2 px-2 justify-between">
-          <div>
-            <h1 className="text-lg">Fare</h1>
-            <p className="text-md font-bold mt-1">{props.ride?.fare}</p>
-          </div>
-          <div>
-            <h1 className="text-lg">Passenger</h1>
-            <p className="text-md font-bold mt-1">2</p>
-          </div>
+    <motion.div
+      initial={{ opacity: 0, scale: 0.9 }}
+      animate={{ opacity: 1, scale: 1 }}
+      exit={{ opacity: 0 }}
+      transition={{ type: "spring", damping: 20 }}
+      className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50 p-4"
+    >
+      <motion.div
+        className="bg-white rounded-xl shadow-2xl max-w-md w-full overflow-hidden"
+        initial={{ y: 50 }}
+        animate={{ y: 0 }}
+      >
+        {/* Header */}
+        <div className="bg-gradient-to-r from-fuchsia-600 to-amber-500 p-4 text-white">
+          <h2 className="text-xl font-bold text-center">Confirm Your Ride</h2>
         </div>
-        {/* -----buttons------ */}
-        <div>
-          <form className="flex flex-col gap-8" onSubmit={submitHandler}>
-            <input
-              value={otp}
-              onChange={(e) => setOtp(e.target.value)}
-              type="text"
-              placeholder="Enter OTP"
-              className="bg-white ring-2 text-black px-5 py-2 text-center rounded-4xl text-sm  font-semibold mt-5 hover:ring-fuchsia-900 w-50"
-            />
-            <div className="flex justify-between mt-5">
-              <button
-                className="bg-green-600 p-3 text-md rounded hover:ring-2 hover:ring-black
-                 text-amber-50"
-              >
-                Confirm
-              </button>
 
+        {/* Content */}
+        <div className="p-6 space-y-6">
+          {/* Ride Info */}
+          <div className=" justify-between bg-gray-50 gap-10 flex flex-row p-2 rounded-lg">
+            <div className="flex items-center gap-3">
+              <FaMoneyBillWave className="text-green-500 text-xl" />
+              <div>
+                <p className="text-sm text-gray-500">Fare</p>
+                <p className="font-bold text-gray-800">₹{ride?.fare || "--"}</p>
+              </div>
+            </div>
+            <div className="flex items-center gap-3">
+             
+              <div>
+                <p className="text-sm text-gray-500">Destination</p>
+                <p className="font-bold text-gray-800">{ride?.destination || "--"}</p>
+              </div>
+            </div>
+          </div>
+
+          {/* OTP Input */}
+          <form onSubmit={submitHandler} className="space-y-6">
+            <div>
+              <label className="flex items-center gap-2 text-gray-700 mb-2">
+                <FaKey className="text-amber-500" />
+                <span>Enter OTP from passenger</span>
+              </label>
+              <input
+                value={otp}
+                onChange={(e) => setOtp(e.target.value)}
+                type="text"
+                placeholder="Enter 6-digit OTP"
+                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-amber-500 focus:border-amber-500 text-center text-lg font-semibold"
+                maxLength="6"
+                required
+              />
+            </div>
+
+            {/* Action Buttons */}
+            <div className="flex gap-4">
               <button
+                type="button"
                 onClick={() => {
-                  props.setConfirmridepopup(false);
-                  props.setConfirmride(false);
+                  setConfirmridepopup(false);
+                  setConfirmride(false);
                 }}
-                className="bg-red-500 hover:ring-2 hover:ring-fuchsia-800 px-3  text-amber-100 text-md rounded"
+                className="flex-1 flex items-center justify-center gap-2 py-3 text-red-500 font-medium hover:bg-red-50 transition-colors border border-red-300 rounded-lg"
               >
-                Cancel
+                <FaTimes /> Cancel
+              </button>
+              <button
+                type="submit"
+                disabled={isLoading || otp.length !== 6}
+                className={`flex-1 flex items-center justify-center gap-2 py-3 bg-gradient-to-r from-fuchsia-600 to-amber-500 text-white font-medium hover:opacity-90 transition-opacity rounded-lg ${
+                  isLoading || otp.length !== 6
+                    ? "opacity-70 cursor-not-allowed"
+                    : ""
+                }`}
+              >
+                {isLoading ? (
+                  <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                ) : (
+                  <>
+                    <FaCheck /> Confirm
+                  </>
+                )}
               </button>
             </div>
           </form>
         </div>
-      </div>
-    </div>
+      </motion.div>
+    </motion.div>
   );
-}
+};
 
-export default ConfirmRidepopup
+export default ConfirmRidepopup;
+
+
+
+
+
+
+
+
+
+

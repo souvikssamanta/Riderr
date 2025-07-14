@@ -11,29 +11,29 @@ if(!pickup || !destination){
 const distanceTime=await mapService.getDistanceAndTime(pickup,destination);
 
 const baseFare = {
-    auto: 30,
-    car: 50,
+    auto: 10,
+    car: 30,
     motorcycle: 20
 };
 
 const perKmRate = {
-    auto: 10,
-    car: 15,
+    auto: 8,
+    car: 10,
     motorcycle: 8
 };
 
 const perMinuteRate = {
-    auto: 2,
+    auto: 1,
     car: 3,
     motorcycle: 1.5
 };
 const distanceInKm = parseFloat(distanceTime.distance.replace(' km', '')); // Remove ' km' and convert to number
-    const durationInMinutes = parseFloat(distanceTime.duration.replace(' mins', '')); // Remove ' mins' and convert to number
+    //const durationInMinutes = parseFloat(distanceTime.duration.replace(' mins', '')); // Remove ' mins' and convert to number
 
     const fare = {
-        auto: baseFare.auto + (distanceInKm * perKmRate.auto) + (durationInMinutes * perMinuteRate.auto),
-        car: baseFare.car + (distanceInKm * perKmRate.car) + (durationInMinutes * perMinuteRate.car),
-        motorcycle: baseFare.motorcycle + (distanceInKm * perKmRate.motorcycle) + (durationInMinutes * perMinuteRate.motorcycle)
+        auto: baseFare.auto + (distanceInKm * perKmRate.auto) ,
+        car: baseFare.car + (distanceInKm * perKmRate.car) ,
+        motorcycle: baseFare.motorcycle + (distanceInKm * perKmRate.motorcycle) 
     };
 
 return fare;

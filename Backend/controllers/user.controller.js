@@ -27,10 +27,10 @@ const user =await userService.createUser({
 })
 const token=user.generateAuthtoken();
 res.cookie("token",token,{
-    httpOnly:true,
-    sameSite:"none",
-    secure:true,
-    maxAge:7*24*3600*1000
+    // httpOnly:true,
+    // sameSite:"none",
+    // secure:true,
+    // maxAge:7*24*3600*1000
 })
 return res.status(201).json({token,user})
 
@@ -46,11 +46,11 @@ const{email,password}=req.body;
 const user=await userModel.findOne({email}).select("+password");
 
 if(!user){
-return res.status(401).json({errors:"invalid email or password"})
+return res.status(401).json({errors:"invalid email"})
 }
 const isMatch=await user.comparePassword(password);
 if(!isMatch){
-    return res.status(401).json({errors:"invalid email or password"})
+    return res.status(401).json({errors:"invalid  password"})
 }
 const token=user.generateAuthtoken();
 res.cookie("token", token, {
@@ -58,13 +58,13 @@ res.cookie("token", token, {
   sameSite: "none",
   secure:true,
   maxAge: 7 * 24 * 3600 * 1000,
+ 
 });
 return res.status(200).json({token,user})
 }
 //---profile----
 module.exports.getProfile=async (req,res,next)=>{
-  res.status(200).json(req.user)
-
+res.status(200).json(req.user);
     
 }
 //---logout---

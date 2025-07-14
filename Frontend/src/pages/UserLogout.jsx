@@ -1,9 +1,8 @@
 import axios from 'axios'
 import React from 'react'
 import { useNavigate } from 'react-router-dom'
-
+import { toast } from 'react-hot-toast'
 const UserLogout = () => {
-
 const token=localStorage.getItem('token')
 const navigate=useNavigate()
 axios
@@ -15,9 +14,7 @@ axios
   .then((response) => {
     if (response.status === 200) {
       localStorage.removeItem("token");
-      alert("logged out!");
-      //after clicking ok on pop up it will be navigated to login
-      //before then we see userlogout paragraph.
+      toast.success("loggedout sucessfully");
       navigate("/login");
     }
   });

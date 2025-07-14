@@ -10,7 +10,7 @@ import ConfirmRidepopup from "../components/ConfirmRidepopup";
 import { SocketContext } from "../context/SocketContext";
 import { CaptainDataContext } from "../context/CaptainContext";
 import LiveTracking from "../components/LiveTracking";
-
+import { toast } from "react-hot-toast";
 function CaptainHome() {
   const [socket] = useContext(SocketContext);
   const {captain} = useContext(CaptainDataContext);
@@ -68,15 +68,16 @@ function CaptainHome() {
         },
       }
     );
-    alert("Ride confirmed successfully!");
+    toast.success("Ride confirmed successfully!");
      setRidepopup(false);
      setConfirmridepopup(true);
   }
 
-  const [ridepopup, setRidepopup] = useState(true);
+  const [ridepopup, setRidepopup] = useState(false);
   const [confirmridepopup, setConfirmridepopup] = useState(false);
   const ridepopupref = useRef(null);
   const confirmridepopupref = useRef(null);
+  const captaidetailsref = useRef(null);
 
   // ----popup pannel----
   useGSAP(
@@ -84,7 +85,7 @@ function CaptainHome() {
       if (ridepopup) {
         gsap.to(ridepopupref.current, {
           height: "100%",
-          opacity: 1,
+          opacity: 100,
         });
       } else {
         gsap.to(ridepopupref.current, {
@@ -96,16 +97,41 @@ function CaptainHome() {
     [ridepopup]
   );
 
+  useGSAP(
+    function () {
+      if (ridepopup) {
+        gsap.to(captaidetailsref.current, {
+          height: "0%",
+          opacity: 0,
+        });
+      } else {
+        gsap.to(captaidetailsref.current, {
+          height: "100%",
+          opacity: 1,
+        });
+      }
+    },
+    [ridepopup]
+  );
+
+
+
+
+
+
+
   //confirmpopup
   useGSAP(
     function () {
       if (confirmridepopup) {
         gsap.to(confirmridepopupref.current, {
           height: "100%",
+          opacity: 100,
         });
       } else {
         gsap.to(confirmridepopupref.current, {
           height: "0%",
+          opacity: 0,
         });
       }
     },
@@ -113,22 +139,22 @@ function CaptainHome() {
   );
 
   return (
-    <div className="h-screen overflow-hidden">
-      <div className=" w-screen absolute px-3">
+    <div className="h-screen flex flex-col overflow-hidden"> 
+      <div className=" w-screen z-100 absolute px-3">
         <Link
-          to={"/home"}
-          className="flex items-center justify-center  h-8 w-8 bg-white rounded-xl mt-3 ml-1"
+          to={"/captain-login"}
+          className="flex items-center justify-center  h-8 w-8 bg-white rounded-xl mt-20 ml-1"
         >
           <i className="ri-logout-box-r-line font-bold text-xl"></i>
         </Link>
       </div>
       {/* ----image section-- */}
-      <div className="h-1/2">
+      <div className="h-[40%]">
         <LiveTracking></LiveTracking>
       </div>
 
-      <div className="h-1/2 fixed  w-full rounded-t-xl  ">
-        <div className=" h-full hidden">
+      <div className="h-[50%]  w-full rounded-t-xl  ">
+        <div ref={captaidetailsref} className="h-full ">
           <CaptainDetails></CaptainDetails>
         </div>
         {/* ridepopup */}
@@ -155,7 +181,7 @@ function CaptainHome() {
         {/* confirmridepopup */}
         <div
           ref={confirmridepopupref}
-          className="h-0 flex flex-row bg-white absolute w-full bottom-0"
+          className="h-0 opacity-0 flex flex-row bg-white absolute w-full bottom-0"
         >
           <ConfirmRidepopup
             ride={ride}

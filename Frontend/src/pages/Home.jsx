@@ -65,6 +65,7 @@ function Home() {
   //----submithandler----
   const submitHandler = (e) => {
     e.preventDefault();
+   
   };
 
   //--for pickup location---
@@ -161,12 +162,15 @@ function Home() {
           padding: 20,
           opacity: "1",
         });
+
+        
       } else {
         gsap.to(vehicleRef.current, {
           opacity: 0,
           height: "0%",
         });
       }
+      
     },
     [transport, pickup]
   );
@@ -259,7 +263,8 @@ function Home() {
   async function createRide() {
     if (!user) {
       // console.error("Cannot create ride: User is not defined or missing _id.");
-      return toast.error("User information is missing. Please log in again.");
+       toast.error("User information is missing");
+      navigate('/login');
     }
 
     try {
@@ -281,96 +286,102 @@ function Home() {
       }
     } catch (error) {
       console.error("Error creating ride:", error);
-      toast.error("Failed to create ride. Please try again.");
+      toast.error("Failed to create ride");
       navigate("/login");
     }
   }
 
   return (
-    <div className="h-screen relative flex flex-col justify-center items-center overflow-hidden max-w-2xl ">
-      <div className=" h-[100%] w-full absolute">
+    <div className="h-screen relative flex flex-col items-center overflow-hidden max-w-2xl ">
+      <div className=" h-[100%] w-full  absolute">
         <LiveTracking></LiveTracking>
       </div>
-      
-      <div className="flex flex-col  justify-end absolute top-0 w-full h-screen  ">
-        <div className="h-[42%] flex bg-amber-400 flex-col py-2 w-full justify-center items-center relative rounded ">
-          {/* <div> */}
-            <h4 className="text-2xl text-center font-semibold">Find a trip</h4>
 
-            {/* pannel of location close */}
+      <div className="flex flex-col justify-end absolute top-0 w-full h-screen  ">
+      
+
+        <div className="h-[42%] flex bg-gradient-to-b from-amber-400 to-orange-200 flex-col py-4 w-full justify-center items-center relative rounded-2xl shadow-xl transition-all duration-300 hover:shadow-2xl">
+          <div className="flex items-center justify-center relative w-full">
+            <h4 className="text-xl text-center font-semibold text-white drop-shadow-md ">
+              Find Your Perfect Trip
+            </h4>
             <h5
               ref={pannelcloseRef}
               onClick={() => {
                 setPannelOpen(false);
               }}
-              className=" absolute text-4xl  top-3 right-5 opacity-0 "
+              className="absolute text-4xl top-1 right-5 opacity-70 hover:opacity-100 hover:scale-110 transition-transform cursor-pointer text-white"
             >
               <i className="ri-arrow-down-s-line"></i>
             </h5>
+          </div>
 
-            <form className="flex flex-col items-center justify-center w-full h-full"
-              onSubmit={(e) => {
-                submitHandler(e);
-              }}
-            >
-              {/* ------pickup------ */}
+          <form
+            className="flex flex-col items-center justify-center w-full h-full px-4"
+            onSubmit={(e) => {
+              submitHandler(e);
+            }}
+          >
+            {/* Pickup Location */}
+            <div className="flex justify-start gap-2 w-full max-w-md group relative">
+              <span className="mt-7 ml-1 text-2xl text-white group-hover:scale-125 transition-transform">
+                <i className="ri-focus-3-line"></i>
+              </span>
+              <input
+                className="w-full bg-white/90 px-5 py-2 mt-3 rounded-xl  text-lg font-semibold   shadow-md hover:shadow-lg"
+                type="text"
+                placeholder="Add a pick-up location"
+                value={pickup}
+                onClick={() => {
+                  setPannelOpen(true);
+                  setActiveField("pickup");
+                }}
+                onChange={handlePickupChange}
+              />
+              <div className="absolute bottom-0 left-10 h-1 bg-blue-400 w-0 group-hover:w-[calc(100%-3rem)] transition-all duration-600"></div>
+            </div>
 
-              <div className="flex  justify-start  gap-2">
-                <span className="mt-8 ml-1">
-                  <i className="text-2xl ri-focus-3-line "></i>
-                </span>
-                <input
-                  className="w-63 bg-[#d7d4d4] px-3 py-2 mt-6 rounded-xl hover:ring-2 text-lg font-bold  "
-                  type="text"
-                  placeholder="Add a pick-up location"
-                  value={pickup}
-                  onClick={() => {
-                    setPannelOpen(true);
-                    setActiveField("pickup");
-                  }}
-                  onChange={handlePickupChange}
-                />
-              </div>
-              {/* swap destination */}
-              <div className="flex w-77 justify-center mt-3 ">
-                <i
-                  onClick={() => swappickupanddestination()}
-                  className="  w-9 h-8 rounded-full text-center border-2  text-xl ri-arrow-up-down-line  "
-                ></i>
-              </div>
+            {/* Swap Button */}
+            <div className="flex w-full justify-center mt-2 group">
+              <button
+                type="button"
+                onClick={() => swappickupanddestination()}
+                className="w-10 h-10 rounded-full bg-white flex items-center justify-center border-2 border-blue-500 text-xl text-blue-500 hover:bg-blue-500 hover:text-white hover:rotate-180 transition-all duration-300 shadow-md hover:shadow-lg"
+              >
+                <i className="ri-arrow-up-down-line"></i>
+              </button>
+            </div>
 
-              {/* -----destination--- */}
+            {/* Destination */}
+            <div className="flex justify-start gap-2 w-full max-w-md group relative">
+              <p className="mt-8 text-2xl ml-1 text-white group-hover:scale-125 transition-transform">
+                <i className="ri-map-pin-range-line"></i>
+              </p>
+              <input
+                className="w-full bg-white/90 px-5 py-1 mt-2 rounded-xl text-lg  font-semibold  shadow-md hover:shadow-lg"
+                type="text"
+                placeholder="Enter your destination"
+                value={destination}
+                onClick={() => {
+                  setPannelOpen(true);
+                  setActiveField("destination");
+                }}
+                onChange={handleDestinationChange}
+              />
+              <div className="absolute bottom-0 left-12 h-1 bg-blue-400 w-0 group-hover:w-[calc(100%-3rem)] transition-all duration-500"></div>
+            </div>
 
-              <div className="flex justify-start gap-2">
-                <p className="mt-8 ">
-                  <i className="text-2xl ml-1 ri-map-pin-range-line"></i>
-                </p>
-
-                <input
-                  className="w-63 bg-[#d7d4d4] px-4 py-2 mt-4 rounded-xl text-lg hover:ring-2 font-bold"
-                  type="text"
-                  placeholder="Enter your destination"
-                  value={destination}
-                  onClick={() => {
-                    setPannelOpen(true);
-                    setActiveField("destination");
-                  }}
-                  onChange={handleDestinationChange}
-                />
-              </div>
-            </form>
-
+            {/* Find Ride Button */}
             <button
               onClick={findTrip}
-              className="bg-black text-white w-40  py-1 mt-6 rounded-lg text-lg  hover:ring-3 hover:ring-blue-300"
+              className="bg-gradient-to-r from-blue-600 to-purple-600 text-white w-48 py-2 mt-5 rounded-xl text-lg font-bold hover:ring-4 hover:ring-blue-300/50 hover:scale-105 transition-all duration-300 shadow-lg hover:shadow-xl active:scale-95"
             >
-              Find a ride
+              Find a Ride
+              <i className="ri-roadster-line ml-2  inline-block"></i>
             </button>
-          {/* </div> */}
-          {/* <div className="bg-amber-600 h-full w-2/3 mr-4 rounded sm:opacity-0 md:opacity-100">
-            <video src=""></video>
-          </div> */}
+          </form>
         </div>
+
         {/* ------location search pannel----- */}
 
         <div ref={panelRef} className="bg-white h-0 relative ">

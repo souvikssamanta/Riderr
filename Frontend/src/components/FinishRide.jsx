@@ -1,78 +1,111 @@
-import React from 'react'
-import { IoAlertCircleOutline } from 'react-icons/io5';
-import { Link } from 'react-router-dom';
-const FinishRide =(props) => {
+
+
+import React from "react";
+import { motion } from "framer-motion";
+import { IoAlertCircleOutline, IoCheckmarkDone } from "react-icons/io5";
+import { FaMapMarkerAlt, FaMoneyBillWave, FaUserFriends } from "react-icons/fa";
+
+const FinishRide = ({ setFinishRidePanel, ride, finshRide }) => {
   return (
-    <div className="bg-white rounded-t-4xl flex flex-row-reverse py-1  h-full">
-      <div className="h-full sm:opacity-0 md:opacity-100">
-        <img className='h-full w-full object-contain'
-          src="https://i.pinimg.com/736x/00/15/26/00152686e511ab101beedf395f1c834b.jpg"
-          alt=""
-        />
-      </div>
-      {/* ----all data--- */}
-      <div className="flex flex-col px-9 py-3 gap-6 max-w-2xl">
-        <h1
-          onClick={() => {
-            props.setFinishRidePanel(false);
-          }}
-          className="text-xl  mt-3 font-semibold bg-amber-500 inline-block rounded-2xl px-5 py-1 "
+    <motion.div
+      initial={{ opacity: 0, y: 50 }}
+      animate={{ opacity: 1, y: 0 }}
+      exit={{ opacity: 0 }}
+      transition={{ type: "spring", damping: 25 }}
+      className=" inset-0 top-auto h-auto max-h-[90vh] bg-white rounded-t-3xl shadow-xl p-6 z-50"
+    >
+      {/* Header */}
+      <div className="flex justify-between items-center mb-6">
+        <h1 className="text-2xl font-bold text-gray-800">Complete Your Ride</h1>
+        <button
+          onClick={() => setFinishRidePanel(false)}
+          className="text-gray-500 hover:text-gray-700"
         >
-          Finish your ride!
-        </h1>
+          ✕
+        </button>
+      </div>
 
-        {/* pickup location and destination */}
+      {/* Ride Details */}
+      <div className="space-y-6">
+        {/* Locations */}
+        <div className="bg-gray-50 rounded-xl p-4">
+          <div className="flex items-start gap-3 mb-4">
+            <FaMapMarkerAlt className="text-fuchsia-600 mt-1" />
+            <div>
+              <p className="text-sm text-gray-500">Pickup Location</p>
+              <p className="font-semibold text-gray-800">
+                {ride?.pickup || "Not specified"}
+              </p>
+            </div>
+          </div>
 
-        <div className="flex flex-col gap-5 ">
-          <div>
-            <p className="text-xl">Pickup </p>
-            <p className="text-xl bg-amber-200 rounded-2xl px-3 inline-block font-bold mt-1">
-              {props.ride?.pickup}
+          <div className="flex items-start gap-3">
+            <FaMapMarkerAlt className="text-amber-500 mt-1" />
+            <div>
+              <p className="text-sm text-gray-500">Destination</p>
+              <p className="font-semibold text-gray-800">
+                {ride?.destination || "Not specified"}
+              </p>
+            </div>
+          </div>
+        </div>
+
+        {/* Fare and Passengers */}
+        <div className="grid grid-cols-2 gap-4">
+          <div className="bg-gray-50 rounded-xl p-4">
+            <div className="flex items-center gap-2">
+              <FaMoneyBillWave className="text-green-500" />
+              <p className="text-sm text-gray-500">Fare</p>
+            </div>
+            <p className="text-xl font-bold text-gray-800 mt-1">
+              ₹{ride?.fare || "--"}
             </p>
           </div>
 
-          <div>
-            <p className="text-xl ">Destination</p>
-            <p className="text-xl bg-amber-200 rounded-2xl px-3 inline-block font-bold mt-1">
-              {props.ride?.destination}
-            </p>
+          <div className="bg-gray-50 rounded-xl p-4">
+            <div className="flex items-center gap-2">
+              <FaUserFriends className="text-blue-500" />
+              <p className="text-sm text-gray-500">Passengers</p>
+            </div>
+            <p className="text-xl font-bold text-gray-800 mt-1">2</p>
           </div>
         </div>
 
-        {/* -----fare and passengers---- */}
-        <div className="flex gap-20">
-          <div>
-            <h1 className="text-xl">Fare</h1>
-            <p className="text-xl bg-amber-200 rounded-2xl px-3 font-bold mt-5">
-              {props.ride?.fare}
-            </p>
-          </div>
-          <div>
-            <h1 className="text-xl">Passenger</h1>
-            <p className="text-xl bg-amber-200 rounded-2xl inline-block px-3 font-bold mt-5">
-              2
-            </p>
-          </div>
-        </div>
-        {/* -----buttons------ */}
-
-        <div className="flex flex-col">
-          <button
-            onClick={() => {
-              props.finshRide();
-              IoAlertCircleOutline("ride finished");
-            }}
-            className="bg-black py-1 text-lg rounded-xl text-amber-50 w-39"
-          >
-            Finish Ride
-          </button>
-          <p className="text-red-700 mt-3 font-semibold text-xl">
-            Click on finish button if you have done payment
+        {/* Warning */}
+        <div className="flex items-start gap-2 bg-amber-50 border border-amber-200 rounded-xl p-3">
+          <IoAlertCircleOutline className="text-amber-600 mt-0.5 flex-shrink-0" />
+          <p className="text-sm text-amber-800">
+            Please confirm payment has been received before finishing the ride
           </p>
         </div>
-      </div>
-    </div>
-  );
-}
 
-export default FinishRide
+        {/* Finish Button */}
+        <motion.button
+          whileTap={{ scale: 0.95 }}
+          onClick={() => {
+            finshRide();
+          }}
+          className="w-full py-3 bg-gradient-to-r from-fuchsia-600 to-amber-500 text-white font-medium rounded-xl shadow-md flex items-center justify-center gap-2"
+        >
+          <IoCheckmarkDone size={20} />
+          Finish Ride
+        </motion.button>
+      </div>
+    </motion.div>
+  );
+};
+
+export default FinishRide;
+
+
+
+
+
+
+
+
+
+
+
+
+

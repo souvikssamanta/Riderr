@@ -1,21 +1,101 @@
-
-import React from 'react'
-import { Link } from 'react-router-dom'
-import { useLocation } from 'react-router-dom'
-import { useNavigate } from 'react-router-dom'
-import { SocketContext } from '../context/SocketContext'
-import {useContext} from 'react'
-import LiveTracking from '../components/LiveTracking'
-import Payment from './Payment'
+import React from "react";
+import { Link, useLocation, useNavigate } from "react-router-dom";
+import { SocketContext } from "../context/SocketContext";
+import { useContext, useEffect } from "react";
+import LiveTracking from "../components/LiveTracking";
+import axios from "axios";
+import { FcCallback } from "react-icons/fc";
+//import {Payment} from './Payment'
 const Riding = () => {
-  const navigate=useNavigate()
+  const navigate = useNavigate();
   const [socket] = useContext(SocketContext);
-  const location=useLocation();
-  const {ride}=location.state
+  const location = useLocation();
 
-// socket.on("ride-finished", (ride) => {
-//   navigate("/home");
-// });
+  // Check for ride data
+  useEffect(() => {
+    if (!location.state || !location.state.ride) {
+      navigate("/home");
+    }
+  }, [location, navigate]);
+
+  if (!location.state || !location.state.ride) {
+    return null; // or a loading spinner/message
+  }
+
+  const { ride } = location.state;
+
+  const initPay = (order) => {
+    const options = {
+      key: import.meta.env.VITE_RAZORPAY_KEY_ID,
+      amount: order.amount,
+      currency: order.currency,
+      name: "User Payment",
+      order_id: order.id,
+      handler:async function (response) {
+        console.log("Payment successful", response);
+        const data =await axios.post(
+          `${import.meta.env.VITE_BACKEND_URL}/pay/verification`,
+          {
+            razorpay_payment_id: response.razorpay_payment_id,
+            razorpay_order_id: response.razorpay_order_id,
+            razorpay_signature: response.razorpay_signature, // changed from 'fare' to 'amount'
+          },
+          {
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem("token")}`,
+            },
+          }
+        );
+        console.log("Payment verification response", data);
+        if(data.status==200){
+          window.location.href = `${import.meta.env.VITE_FRONTEND_URL}/success?reference=${response.razorpay_payment_id}`;
+          
+        }
+        else{
+          window.location.href = `${
+            import.meta.env.VITE_FRONTEND_URL
+          }/fail?reference=${response.razorpay_payment_id}`;
+        }
+
+      },
+    
+      prefill: {
+        email: "abcd@gmail.com",
+      },
+      theme: {
+        color: "#3399cc",
+      },
+    };
+  
+    
+
+    const rzp = new window.Razorpay(options);
+    rzp.open();
+  };
+
+  const handlePayment = async (fare) => {
+    const responseRazorpay = await axios.post(
+      `${import.meta.env.VITE_BACKEND_URL}/pay/payment`,
+      {
+        amount: fare, // changed from 'fare' to 'amount'
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+      }
+    );
+    if (responseRazorpay.data.success) {
+      console.log(responseRazorpay.data.order);
+      initPay(responseRazorpay.data.order);
+     
+    }
+    else {
+      console.error("Payment initialization failed");
+      alert("Payment initialization failed. Please try again.");
+    }
+  };
+
   return (
     <div className="h-screen">
       <Link
@@ -50,21 +130,18 @@ const Riding = () => {
             cash
           </Link>
 
-          <Link
-            to="/payment"
-            className="bg-green-500 py-1 text-xl w-30 text-center rounded-xl "
+          <button
+            onClick={() => {
+              handlePayment(ride.fare);
+            }}
+            className="bg-green-500 py-1 text-xl w-30 text-center rounded-xl hover:cursor-wait "
           >
             online
-          </Link>
+          </button>
         </div>
-      </div>
-      <div className='h-0'>
-        <Payment fare={ride.fare}></Payment>
       </div>
     </div>
   );
-}
+};
 
-export default Riding
-
-
+export default Riding;
