@@ -1,160 +1,220 @@
-import React from 'react'
-import  { useState } from 'react'
-import {Link, useNavigate} from "react-router-dom"
-import axios from 'axios'
-import  { UserDataContext } from '../context/UserContext'
-import { useContext } from 'react'
+
+
+import React, { useState, useContext } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import axios from "axios";
+import { UserDataContext } from "../context/UserContext";
 import Logo from "../assets/RideLogo.png";
 import { GoogleLogin } from "@react-oauth/google";
+import { toast } from "react-hot-toast";
+
+
 function UserSignup() {
-const [email,setEmail]=useState('')
-const [password,setPassword]=useState('')
-const [firstname,setFirstname]=useState('')
-const [lastname,setLastname]=useState('')
-// const [userData,setUserData]=useState({})
+  const [formData, setFormData] = useState({
+    firstname: "",
+    lastname: "",
+    email: "",
+    password: "",
+  });
+  const navigate = useNavigate();
+  const { setUser } = useContext(UserDataContext);
 
-const navigate=useNavigate()
+  const handleChange = (e) => {
+    const { id, value } = e.target;
+    setFormData((prev) => ({
+      ...prev,
+      [id]: value,
+    }));
+  };
 
-const {user , setUser}=useContext(UserDataContext);
+  const submitHandler = async (e) => {
+    e.preventDefault();
+    const newUser = {
+      fullname: {
+        firstname: formData.firstname,
+        lastname: formData.lastname,
+      },
+      email: formData.email,
+      password: formData.password,
+    };
 
-const submitHandler=async(e)=>{
-e.preventDefault()
-const newUser={
-  fullname:{
-    firstname:firstname,
-    lastname:lastname},
-  
-    email:email,
-    password:password
-}
-try{
-const response = await axios.post(
-  `${import.meta.env.VITE_BACKEND_URL}/users/register`,
-  newUser
-);
-if(response.status===201){
-const data=response.data
-setUser(data.user)
-console.log(data.user)
-localStorage.setItem('token',data.token)
-navigate('/home')
-}
-}catch(error){
-console.log(error)
-}
- setPassword('')
-setEmail('')
- setFirstname('')
- setLastname('');
-}
+    try {
+      const response = await axios.post(
+        `${import.meta.env.VITE_BACKEND_URL}/users/register`,
+        newUser
+      );
+      if (response.status === 201) {
+        const data = response.data;
+        setUser(data.user);
+        localStorage.setItem("token", data.token);
+        toast.success("Signed up successfully");
+        navigate("/home");
+      }
+    } catch (error) {
+      toast.error(error.response?.data?.message || "Signup failed");
+    }
+
+    setFormData({
+      firstname: "",
+      lastname: "",
+      email: "",
+      password: "",
+    });
+  };
 
   return (
-    <div className="px-4 font-primary w-full h-screen flex flex-row-reverse justify-around gap-5">
-      <div className="h-screen w-1/2 flex items-center">
+    <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4">
+      <div className="hidden lg:flex lg:w-1/2 lg:justify-center lg:items-center lg:pr-8">
         <img
-          className=" sm:opacity-0 md:opacity-100 sm:h-0 md:h-1/2"
-          src="https://img.freepik.com/free-vector/sign-up-concept-illustration_114360-7865.jpg"
-          alt=""
+          src="https://img.freepik.com/free-vector/personal-settings-concept-illustration_114360-2659.jpg?semt=ais_hybrid&w=740"
+          alt="Signup illustration"
+          className="max-w-md rounded-lg shadow-xl"
         />
       </div>
 
-      <div className="h-screen ">
-        <img className="  h-18 w-18 " src={Logo} />
+      <div className="w-full max-w-md lg:w-1/2 lg:max-w-lg">
+        <div className="bg-white py-8 px-4 shadow sm:rounded-lg sm:px-10">
+          <div className="sm:mx-auto sm:w-full sm:max-w-md">
+            <img className="mx-auto h-12 w-auto" src={Logo} alt="Ride Logo" />
+          </div>
 
-        <form
-          className="px-4  w-70 py-8 rounded-2xl bg-amber-50"
-          onSubmit={(e) => {
-            submitHandler(e);
-          }}
-          action=""
-        >
-          <p
-            className="font-bold text-center bg-gradient-to-tl from-pink-400 to-purple-700 text-transparent
-          bg-clip-text text-xl mb-3"
-          >
-            Welcome{" "}
+          <h2 className="mt-6 text-2xl font-bold text-center text-gray-800">
+            Create your account
+          </h2>
+          <p className="mt-2 text-center text-sm text-gray-600">
+            Join us today!
           </p>
-          <p className="font-semibold text-xl mb-2">Sign up</p>
-          <h3 className="text-sm font-semibold py-2  ">What's your name</h3>
-          <div className="flex gap-2 mb-2">
-            <input
-              required
-              type="text"
-              value={firstname}
-              onChange={(e) => {
-                setFirstname(e.target.value);
-              }}
-              className="bg-transparent rounded-s-xl border w-1/2  px-3 py-1.5 text-lg mt-2"
-              placeholder="Firstname"
-            />
-            <input
-              required
-              type="text"
-              value={lastname}
-              onChange={(e) => {
-                setLastname(e.target.value);
-              }}
-              className="bg-transparent rounded-e-xl border w-1/2 px-3 py-2 text-lg mt-2"
-              placeholder="lastname"
-            />
+
+          <form className="mt-8 space-y-6" onSubmit={submitHandler}>
+            <div className="grid grid-cols-1 gap-y-4 gap-x-6 sm:grid-cols-2">
+              <div>
+                <label
+                  htmlFor="firstname"
+                  className="block text-sm font-medium text-gray-700"
+                >
+                  First name
+                </label>
+                <input
+                  required
+                  id="firstname"
+                  type="text"
+                  value={formData.firstname}
+                  onChange={handleChange}
+                  className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-purple-500 focus:border-purple-500"
+                  placeholder="John"
+                />
+              </div>
+              <div>
+                <label
+                  htmlFor="lastname"
+                  className="block text-sm font-medium text-gray-700"
+                >
+                  Last name
+                </label>
+                <input
+                  required
+                  id="lastname"
+                  type="text"
+                  value={formData.lastname}
+                  onChange={handleChange}
+                  className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-purple-500 focus:border-purple-500"
+                  placeholder="Doe"
+                />
+              </div>
+            </div>
+
+            <div>
+              <label
+                htmlFor="email"
+                className="block text-sm font-medium text-gray-700"
+              >
+                Email address
+              </label>
+              <input
+                required
+                id="email"
+                type="email"
+                value={formData.email}
+                onChange={handleChange}
+                className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-purple-500 focus:border-purple-500"
+                placeholder="email@example.com"
+              />
+            </div>
+
+            <div>
+              <label
+                htmlFor="password"
+                className="block text-sm font-medium text-gray-700"
+              >
+                Password
+              </label>
+              <input
+                required
+                id="password"
+                type="password"
+                value={formData.password}
+                onChange={handleChange}
+                className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-purple-500 focus:border-purple-500"
+                placeholder="••••••••"
+              />
+            </div>
+
+            <div>
+              <button
+                type="submit"
+                className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-purple-600 hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500"
+              >
+                Sign up
+              </button>
+            </div>
+          </form>
+
+          <div className="mt-6">
+            <div className="relative">
+              <div className="absolute inset-0 flex items-center">
+                <div className="w-full border-t border-gray-300"></div>
+              </div>
+              <div className="relative flex justify-center text-sm">
+                <span className="px-2 bg-white text-gray-500">
+                  Or continue with
+                </span>
+              </div>
+            </div>
+
+            <div className="mt-6 flex justify-center">
+              <GoogleLogin
+                onSuccess={(credentialResponse) => {
+                  console.log(credentialResponse);
+                }}
+                onError={() => {
+                  console.log("Login Failed");
+                }}
+              />
+            </div>
           </div>
 
-          <h3 className="text-sm font-semibold mb-1  ">What's Your Email</h3>
-          <input
-            required
-            type="email"
-            value={email}
-            onChange={(e) => {
-              setEmail(e.target.value);
-            }}
-            className=" rounded-full border w-60 px-4 py-1.5 text-sm mt-1"
-            placeholder="Eg:email@example.com"
-          />
-          <h3 className="text-sm font-semibold mt-1 ">Enter Password</h3>
-          <input
-            type="password"
-            className="bg-transparent rounded-full border  px-4 py-1.5 text-sm mt-1"
-            placeholder="Eg:paSSword@123"
-            value={password}
-            onChange={(e) => {
-              setPassword(e.target.value);
-            }}
-          />
-          <div className="mt-3 flex gap-2">
-            <input className="" type="checkbox" />
-            <span>Remind me</span>
+          <div className="mt-6 text-center">
+            <p className="text-sm text-gray-600">
+              Already have an account?{" "}
+              <Link
+                to="/login"
+                className="font-medium text-purple-600 hover:text-purple-500"
+              >
+                Log in
+              </Link>
+            </p>
           </div>
-          <button className="bg-black  text-white text-sm w-full mt-4 mb-3 rounded-2xl py-2 font-semibold">
-            Sign up
-          </button>
-
-          <div className="flex justify-center mt-2 text-xl">
-            ---------- or -----------
-          </div>
-          <GoogleLogin
-            onSuccess={(credentialResponse) => {
-              console.log(credentialResponse);
-            }}
-            onError={() => {
-              console.log("Login Failed");
-            }}
-          />
-
-          <p className="mt-6 text-sm font-medium">
-            Already have an account?
-            <Link to="/login" className="text-blue-800 ml-3">
-              Log in
-            </Link>
-          </p>
-        </form>
-        <span className="ml-25 text-lg px-2 py-2 bg-amber-200 rounded-2xl font-medium">
-          <Link to="/logout" className="text-orange-500">
-            Logout
-          </Link>
-        </span>
         </div>
+      </div>
     </div>
   );
 }
 
-export default UserSignup
+export default UserSignup;
+
+
+
+
+
+
+
