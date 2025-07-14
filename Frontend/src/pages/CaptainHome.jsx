@@ -80,14 +80,13 @@ function CaptainHome() {
   const confirmridepopupref = useRef(null);
   const captaidetailsref = useRef(null);
 
-
   // ----popup pannel----
   useGSAP(
     function () {
       if (ridepopup) {
         gsap.to(ridepopupref.current, {
           height: "100%",
-          opacity: 1,
+          opacity: 100,
         });
       } else {
         gsap.to(ridepopupref.current, {
@@ -127,10 +126,12 @@ function CaptainHome() {
       if (confirmridepopup) {
         gsap.to(confirmridepopupref.current, {
           height: "100%",
+          opacity: 100,
         });
       } else {
         gsap.to(confirmridepopupref.current, {
           height: "0%",
+          opacity: 0,
         });
       }
     },
@@ -138,21 +139,21 @@ function CaptainHome() {
   );
 
   return (
-    <div className="h-screen overflow-hidden">
-      <div className=" w-screen absolute px-3">
+    <div className="h-screen flex flex-col overflow-hidden"> 
+      <div className=" w-screen top-15 z-100 absolute px-3">
         <Link
-          to={"/home"}
-          className="flex items-center justify-center  h-8 w-8 bg-white rounded-xl mt-3 ml-1"
+          to={"/captain-login"}
+          className="flex items-center justify-center  h-8 w-8 bg-white rounded-xl ml-1"
         >
           <i className="ri-logout-box-r-line font-bold text-xl"></i>
         </Link>
       </div>
       {/* ----image section-- */}
-      <div className="h-1/3">
+      <div className="h-[46%]">
         <LiveTracking></LiveTracking>
       </div>
 
-      <div className="h-2/3 fixed  w-full rounded-t-xl  ">
+      <div className="h-[54%] fixed bottom-0 w-full rounded-t-xl  ">
         <div ref={captaidetailsref} className=" h-full ">
           <CaptainDetails></CaptainDetails>
         </div>
