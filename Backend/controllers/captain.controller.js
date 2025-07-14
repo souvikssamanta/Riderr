@@ -7,10 +7,10 @@ const blacklistTokenModel = require("../models/blacklist.token");
 module.exports.registerCaptain=async(req,res,next)=>{
 const errors=validationResult(req);
     if(!errors.isEmpty()){  
-        
+        console.log(errors);
         return res.status(400).json({errors:errors.array()})
     }
-    const{fullname,email,password,vehicle}=req.body;
+    const{fullname,email,contact,password,vehicle}=req.body;
  const isCaptainExist=await captainModel.findOne({email})
 
  if(isCaptainExist){
@@ -23,10 +23,11 @@ return res.status(400).json({message:"captain already exists"});
         firstname:fullname.firstname,
         lastname:fullname.lastname,
         email,
+        contact,
         password:hashedpassword,
-        color:vehicle.color,
+       
         plate:vehicle.plate,
-        capacity:vehicle.capacity,
+        License:vehicle.License,
         vehicleType:vehicle.vehicleType
 
     })
