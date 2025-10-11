@@ -36,11 +36,7 @@
     "recharts": "^3.1.2",
     "remixicon": "^4.6.0",
     "socket.io-client": "^4.8.1",
-<<<<<<< HEAD
     "tailwind-merge": "^3.3.1",
-=======
-    "framer-motion": "^12.23.5",
->>>>>>> 2939602d3275659298e7bf36c209be64b3f2e187
     "tailwindcss": "^4.0.7"
   },
   "devDependencies": {
