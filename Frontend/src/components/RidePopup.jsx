@@ -1,6 +1,4 @@
 
-
-
 import React from "react";
 import { motion } from "framer-motion";
 import {
@@ -11,10 +9,12 @@ import {
   FaMoneyBillWave,
 } from "react-icons/fa";
 
+
 const RidePopup = ({
   setRidepopup,
   ride,
   confirmRide,
+ 
   setConfirmridepopup,
 }) => {
   return (
@@ -86,7 +86,8 @@ const RidePopup = ({
         <div className="flex border-t border-gray-200">
           <button
             onClick={() => {
-              setRidepopup(false);
+              
+            setRidepopup(false);
             }}
             className="flex-1 flex items-center justify-center gap-2 py-3 text-red-500 font-medium hover:bg-red-50 transition-colors"
           >

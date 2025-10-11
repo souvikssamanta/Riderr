@@ -6,12 +6,12 @@ const express = require("express");
 const router = express();
 
 router.post("/payment", authMiddleware.authUser,newpayment);
-router.post("/verification", authMiddleware.authUser,verification);
+router.post("/verification",verification);
 
 module.exports = router;
 
 
 
 
-
-
+  
+ 

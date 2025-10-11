@@ -22,12 +22,29 @@ const userSchema = new mongoose.Schema({
   },
   password: {
     type: String,
-    requred: true,
+    //requred: true,
     select: false,
   },
   socketId: {
     type: String,
   },
+
+resetOtp:{
+  type:String
+},
+
+otpExpires:{
+type:Date
+},
+
+isOtpVerified:{
+    type:Boolean,
+    default:false
+}
+
+
+
+
 });
 userSchema.methods.generateAuthtoken = function () {
   const token = jwt.sign({ _id: this._id }, process.env.JWT_SECRET, {

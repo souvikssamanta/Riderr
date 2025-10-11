@@ -63,6 +63,23 @@ const captainSchema = new mongoose.Schema({
   socketId: {
     type: String,
   },
+resetOtp:{
+  type:String
+},
+
+otpExpires:{
+type:Date
+},
+
+isOtpVerified:{
+    type:Boolean,
+    default:false
+},
+
+photoUrl: {
+    type: String,
+    default: "https://res.cloudinary.com/dgjsmh09r/image/upload/v1709999999/default-avatar.png",
+  },
 
   location: {
     ltd: {

@@ -31,7 +31,7 @@ function Home() {
   const [vehicleType, setVehicleType] = useState(null);
   const [ride, setRide] = useState(null);
   const navigate = useNavigate();
-  
+
   //---useref functions-----
   const panelRef = useRef(null);
   const pannelcloseRef = useRef(null);
@@ -42,30 +42,47 @@ function Home() {
 
   const [socket] = useContext(SocketContext);
   const { user } = useContext(UserDataContext); // Correctly destructure the array
-  //console.log(user);
+  
   useEffect(() => {
     if (user && user._id) {
       socket.emit("join", { userType: "user", userId: user._id });
     } else {
       console.warn("User is not defined or missing _id property.");
     }
-  }, [user]);
 
-  socket.on("ride-confirmed", (ride) => {
-    setWaitforDriver(true);
-    setDriver(false);
-    setRide(ride);
-  });
+    const handleRideConfirmed = (ride) => {
+      setWaitforDriver(true);
+      setDriver(false);
+      setRide(ride);
+    };
 
-  socket.on("ride-started", (ride) => {
-    setWaitforDriver(false);
-    navigate("/riding", { state: { ride } });
-  });
+    const handleRideCanceled = (ride) => {
+      toast.error("Ride has been canceled by the captain.");
+      setDriver(false);
+      setWaitforDriver(false);
+      navigate("/login");
+    };
+
+    const handleRideStarted = (ride) => {
+      setWaitforDriver(false);
+      navigate("/riding", { state: { ride } });
+    };
+
+    socket.on("ride-confirmed", handleRideConfirmed);
+    socket.on("ride-canceled", handleRideCanceled);
+    socket.on("ride-started", handleRideStarted);
+
+    // cleanup to prevent duplicate listeners
+    return () => {
+      socket.off("ride-confirmed", handleRideConfirmed);
+      socket.off("ride-canceled", handleRideCanceled);
+      socket.off("ride-started", handleRideStarted);
+    };
+  }, [user, navigate]); // dependencies
 
   //----submithandler----
   const submitHandler = (e) => {
     e.preventDefault();
-   
   };
 
   //--for pickup location---
@@ -162,15 +179,12 @@ function Home() {
           padding: 20,
           opacity: "1",
         });
-
-        
       } else {
         gsap.to(vehicleRef.current, {
           opacity: 0,
           height: "0%",
         });
       }
-      
     },
     [transport, pickup]
   );
@@ -263,8 +277,8 @@ function Home() {
   async function createRide() {
     if (!user) {
       // console.error("Cannot create ride: User is not defined or missing _id.");
-       toast.error("User information is missing");
-      navigate('/login');
+      toast.error("User information is missing");
+      navigate("/login");
     }
 
     try {
@@ -292,14 +306,12 @@ function Home() {
   }
 
   return (
-    <div className="h-screen relative flex flex-col items-center overflow-hidden max-w-2xl ">
+    <div className="h-screen relative flex container mx-auto flex-col items-center overflow-hidden max-w-2xl ">
       <div className=" h-[100%] w-full  absolute">
         <LiveTracking></LiveTracking>
       </div>
 
       <div className="flex flex-col justify-end absolute top-0 w-full h-screen  ">
-      
-
         <div className="h-[42%] flex bg-gradient-to-b from-amber-400 to-orange-200 flex-col py-4 w-full justify-center items-center relative rounded-2xl shadow-xl transition-all duration-300 hover:shadow-2xl">
           <div className="flex items-center justify-center relative w-full">
             <h4 className="text-xl text-center font-semibold text-white drop-shadow-md ">

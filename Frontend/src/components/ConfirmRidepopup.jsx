@@ -15,6 +15,7 @@ import {
 const ConfirmRidepopup = ({
   setConfirmridepopup,
   setConfirmride,
+  cancelRide,
   setRidepopup,
   ride,
 }) => {
@@ -111,6 +112,7 @@ const ConfirmRidepopup = ({
               <button
                 type="button"
                 onClick={() => {
+                  cancelRide();
                   setConfirmridepopup(false);
                   setConfirmride(false);
                 }}

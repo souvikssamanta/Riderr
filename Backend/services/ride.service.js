@@ -127,7 +127,7 @@ module.exports.finishRide=async({rideId})=>{
 if(ride.status!=="ongoing"){
     throw new Error("ride is not ongoing");
 }
-const updatedRide=await rideModel.findOneAndUpdate({
+const updatedRide=await rideModel.findByIdAndUpdate(rideId,{
     status:"completed"
 })
 

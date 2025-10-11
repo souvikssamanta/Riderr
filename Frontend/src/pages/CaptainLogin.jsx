@@ -4,7 +4,9 @@ import { useState, useContext } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { CaptainDataContext } from "../context/CaptainContext";
 import { toast } from "react-hot-toast";
-import Logo from "../assets/RideLogo.png";
+import { signInWithPopup } from "firebase/auth";
+import { auth, provider } from "../../utils/Firebase";
+
 import { motion } from "framer-motion";
 import {
   FiLogIn,
@@ -54,6 +56,38 @@ function CaptainLogin() {
       setIsLoading(false);
     }
   };
+const googleSignin = async () => {
+  try {
+    const data = await signInWithPopup(auth, provider);
+    let captain = data.user;
+    let name = captain.displayName;
+    const parts = name.trim().split(" ");
+    let firstname = parts[0];
+    let lastname = parts[1];
+    let email = captain.email;
+    const newCaptain = {
+      firstname,
+      lastname,
+
+      email,
+    };
+    const response = await axios.post(
+      `${import.meta.env.VITE_BACKEND_URL}/captains/google-login`,
+      newCaptain
+    );
+
+    if (response.status === 201) {
+      const googledata = response.data;
+      setCaptain(googledata.user);
+      localStorage.setItem("token", googledata.token);
+      toast.success("Signed in successfully");
+      navigate("/captain-home");
+    }
+  } catch (error) {
+    console.error("Google signin failed", error);
+    toast.error("Google signin failed");
+  }
+};
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-amber-50 to-white flex flex-col md:flex-row items-center justify-center p-2">
@@ -80,9 +114,7 @@ function CaptainLogin() {
       </motion.div>
 
       {/* Right Side - Login Form */}
-      <div className="w-full md:w-1/2 max-w-md bg-white rounded-2xl shadow-xl px-5 py-4 h-screen">
-        
-
+      <div className="w-full md:w-1/2 max-w-md bg-white rounded-2xl shadow-xl px-5 py-6 h-4xl">
         <h1 className="text-3xl font-bold text-center text-gray-800 mb-2">
           Sign In
         </h1>
@@ -153,7 +185,7 @@ function CaptainLogin() {
           {/* Remember Me & Forgot Password */}
           <div className="flex items-center justify-between">
             <Link
-              to="/forgot-password"
+              to="/captain-forgetpassword"
               className="text-sm text-amber-600 hover:text-amber-500"
             >
               Forgot password?
@@ -178,6 +210,9 @@ function CaptainLogin() {
           </button>
 
           {/* Social Login */}
+        </form>
+
+        <div className="py-5">
           <div className="relative">
             <div className="absolute inset-0 flex items-center">
               <div className="w-full border-t border-gray-300"></div>
@@ -189,24 +224,20 @@ function CaptainLogin() {
             </div>
           </div>
 
-          <div className="flex justify-center">
-            <GoogleLogin
-              onSuccess={(credentialResponse) => {
-                console.log(credentialResponse);
-              }}
-              onError={() => {
-                console.log("Login Failed");
-                toast.error("Google login failed");
-              }}
-              theme="filled_blue"
-              size="large"
-              shape="rectangular"
-              width="300"
-            />
+          <div className="flex justify-center items-center">
+            <button
+              onClick={googleSignin}
+              className="mt-6 w-full max-w-xs py-3 px-6 flex items-center justify-center gap-3 bg-white border border-gray-300 rounded-lg shadow-sm hover:shadow-md transition-shadow duration-200 focus:outline-none focus:ring-2 focus:ring-offset-1 focus:ring-blue-500"
+            >
+              <i className="ri-google-fill text-yellow-300"></i>
+              <span className="text-gray-700 font-medium text-sm sm:text-base">
+                Sign in with Google
+              </span>
+            </button>
           </div>
 
           {/* Sign Up Link */}
-          <div className="text-center text-sm text-gray-600">
+          <div className="text-center text-sm text-gray-600 py-3">
             <p>
               New here?{" "}
               <Link
@@ -217,13 +248,12 @@ function CaptainLogin() {
               </Link>
             </p>
           </div>
-        </form>
-        <div className=" mt-12 text-lg px-2 py-2 bg-amber-200 rounded-2xl text-center font-medium">
-         
+        </div>
+
+        <div className="text-center mt-5 text-lg px-2 py-2 bg-amber-200 rounded-2xl font-medium">
           <Link to="/captain-logout" className="text-orange-500">
-             Logout
+            Logout
           </Link>
-       
         </div>
       </div>
     </div>

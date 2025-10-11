@@ -1,4 +1,5 @@
 const paymentModel = require("../models/payment.model.js");
+const rideModel=require('../models/ride.model.js')
 const razorpay = require("razorpay");
 const crypto=require('crypto');
 //intialize razorpay
@@ -9,7 +10,7 @@ const razorpayInstance = new razorpay({
 
 module.exports.newpayment = async (req, res) => {
   try {
-    const { amount } = req.body;
+    const { amount,rideId } = req.body;
     const orderData = {
       amount,
       paymentMethod: "Razorpay",
@@ -19,6 +20,10 @@ module.exports.newpayment = async (req, res) => {
 
     const newOrder = new paymentModel(orderData);
     await newOrder.save();
+    
+    const paymentMode= await rideModel.findByIdAndUpdate(rideId, {
+      paymentType: "online",})
+
 
     const options = {
       amount: Number(amount) * 100, // ensure integer paise
@@ -46,7 +51,7 @@ const expectedSignature=crypto.createHmac("sha256",process.env.RAZORPAY_KEY_SECR
 console.log("expectedSignature",expectedSignature);
 console.log("razorpay_signature",razorpay_signature);
 const isAuthentic = razorpay_signature === expectedSignature;
-console.log("isAuthentic",isAuthentic);
+
 if(isAuthentic){
 
 return  res.status(200).json({ success: true});
@@ -58,6 +63,13 @@ return  res.status(400).json({ success: false });
 
 
 }
+
+
+
+
+
+
+
 
 
 

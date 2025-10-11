@@ -14,7 +14,8 @@ axios
   .then((response) => {
     if (response.status === 200) {
       localStorage.removeItem("token");
-      toast.success("loggedout sucessfully");
+     toast.success("loggedout sucessfully");
+      
       navigate("/login");
     }
   });

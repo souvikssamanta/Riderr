@@ -1,16 +1,13 @@
+import React, { useRef, useState } from 'react'
+import { Link, useLocation } from 'react-router-dom'
+import FinishRide from '../components/FinishRide'
+import { useGSAP } from '@gsap/react'
+import { useNavigate } from 'react-router-dom'
+import axios from 'axios'
+import gsap from 'gsap'
+import LiveTracking from '../components/LiveTracking'
 
-
-
-import React, { useRef, useState } from "react";
-import { Link, useLocation } from "react-router-dom";
-import FinishRide from "../components/FinishRide";
-import { useGSAP } from "@gsap/react";
-import { useNavigate } from "react-router-dom";
-import axios from "axios";
-import gsap from "gsap";
-import LiveTracking from "../components/LiveTracking";
-
-
+ import { toast } from 'react-hot-toast'
 const CaptainRiding = () => {
   const [finishRidePanel, setFinishRidePanel] = useState(false);
   const finishRidePanelRef = useRef(null);
@@ -50,6 +47,11 @@ const CaptainRiding = () => {
     );
     if (response.request.status === 200) {
       navigate("/captain-login");
+  }
+;
+if(response.request.status===200){  
+     toast.success("Ride finished sucessfully");
+     navigate('/captain-login',)
     }
   }
 
@@ -96,6 +98,7 @@ const CaptainRiding = () => {
 };
 
 export default CaptainRiding;
+
 
 
 

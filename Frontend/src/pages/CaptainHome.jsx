@@ -68,10 +68,32 @@ function CaptainHome() {
         },
       }
     );
-    toast.success("Ride confirmed successfully!");
+   
      setRidepopup(false);
      setConfirmridepopup(true);
+     toast.success("Ride confirmed successfully");
   }
+
+
+async function cancelRide() {
+  const response = await axios.post(
+    `${import.meta.env.VITE_BACKEND_URL}/rides/cancel`,
+    {
+      rideId: ride?._id,
+      //captainId: captain._id,
+    },
+    {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("token")}`,
+      },
+    }
+  );
+
+  if(response.status==200){
+    setRidepopup(false);
+    toast.success("Ride canceled successfully");
+  }
+}
 
   const [ridepopup, setRidepopup] = useState(false);
   const [confirmridepopup, setConfirmridepopup] = useState(false);
@@ -97,7 +119,7 @@ function CaptainHome() {
     [ridepopup]
   );
 
-  useGSAP(
+ useGSAP(
     function () {
       if (ridepopup) {
         gsap.to(captaidetailsref.current, {
@@ -118,8 +140,7 @@ function CaptainHome() {
 
 
 
-
-
+  
   //confirmpopup
   useGSAP(
     function () {
@@ -139,22 +160,22 @@ function CaptainHome() {
   );
 
   return (
-    <div className="h-screen flex flex-col overflow-hidden"> 
-      <div className=" w-screen z-100 absolute px-3">
+    <div className="h-screen flex flex-col overflow-hidden">
+      <div className=" w-screen top-15 z-100 absolute px-3">
         <Link
           to={"/captain-login"}
-          className="flex items-center justify-center  h-8 w-8 bg-white rounded-xl mt-20 ml-1"
+          className="flex items-center justify-center  h-8 w-8 bg-white rounded-xl ml-1"
         >
           <i className="ri-logout-box-r-line font-bold text-xl"></i>
         </Link>
       </div>
       {/* ----image section-- */}
-      <div className="h-[40%]">
+      <div className="h-[46%]">
         <LiveTracking></LiveTracking>
       </div>
 
-      <div className="h-[50%]  w-full rounded-t-xl  ">
-        <div ref={captaidetailsref} className="h-full ">
+      <div className="h-[54%] fixed bottom-0 w-full rounded-t-xl  ">
+        <div ref={captaidetailsref} className=" h-full ">
           <CaptainDetails></CaptainDetails>
         </div>
         {/* ridepopup */}
@@ -167,6 +188,7 @@ function CaptainHome() {
             setRidepopup={setRidepopup}
             ride={ride}
             confirmRide={confirmRide}
+           
             setConfirmridepopup={setConfirmridepopup}
           ></RidePopup>
           <div className="h-full sm:opacity-0 md:opacity-100">
@@ -181,10 +203,11 @@ function CaptainHome() {
         {/* confirmridepopup */}
         <div
           ref={confirmridepopupref}
-          className="h-0 opacity-0 flex flex-row bg-white absolute w-full bottom-0"
+          className="h-0 flex flex-row opacity-0 bg-white absolute w-full bottom-0"
         >
           <ConfirmRidepopup
             ride={ride}
+            cancelRide={cancelRide}
             setRidepopup={setRidepopup}
             setConfirmridepopup={setConfirmridepopup}
           ></ConfirmRidepopup>

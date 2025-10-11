@@ -83,6 +83,55 @@ catch(err){
 }
 }
 
+
+module.exports.cancelRide = async (req, res) => {
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    console.log(errors.array());
+    return res.status(400).json({ errors: errors.array() });
+  }
+
+  try {
+    const { rideId } = req.body; // or req.body
+    const ride = await rideModel
+      .findById(rideId)
+      .populate("userId", "socketId"); // populate only socketId from User
+
+    console.log("Ride to cancel:", ride);
+    if (!ride) {
+      return res.status(404).json({ message: "Ride not found" });
+    }
+
+    // Update status if needed
+    ride.status = "canceled";
+    await ride.save();
+
+    sendMessageToSocketId(ride.userId.socketId, {
+      event: "ride-canceled",
+      data: ride,
+    });
+
+    return res.status(200).json(ride);
+  } catch (err) {
+    console.error(err);
+    return res.status(400).json({ message: err.message });
+  }
+};
+
+module.exports.getTrips=async(req,res)=>{
+    try {
+      const trips = await rideModel
+        .find()
+        .populate("userId", "fullname")
+        .populate("captain", "fullname")
+        .sort({ createdAt: -1 }); // newest first
+      res.json(trips);
+    } catch (err) {
+      console.error("Error fetching trips:", err);
+      res.status(500).json({ message: "Server error fetching trips" });
+    }
+}
+
 module.exports.startRide=async(req,res)=>{
 const errors=validationResult(req);
 if(!errors.isEmpty()){

@@ -20,7 +20,12 @@ authMiddleware.authCaptain,
 body("rideId").isString().withMessage('rideId is required'),
 rideController.confirmRide
 )
-
+router.post(
+  "/cancel",
+  authMiddleware.authCaptain,
+  body("rideId").isString().withMessage("rideId is required"),
+  rideController.cancelRide
+);
 router.get(
   "/start-ride",
   authMiddleware.authCaptain,
@@ -39,7 +44,12 @@ router.post('/finish-ride',
   rideController.finishRide
 );
 
+router.get(
+  "/trips",
+  
 
+  rideController.getTrips
+);
 
 
 module.exports = router;
