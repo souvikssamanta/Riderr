@@ -6,7 +6,6 @@ import { useNavigate } from 'react-router-dom'
 import axios from 'axios'
 import gsap from 'gsap'
 import LiveTracking from '../components/LiveTracking'
-
  import { toast } from 'react-hot-toast'
 const CaptainRiding = () => {
   const [finishRidePanel, setFinishRidePanel] = useState(false);

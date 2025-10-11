@@ -9,7 +9,6 @@ import {
   FaMoneyBillWave,
 } from "react-icons/fa";
 
-
 const RidePopup = ({
   setRidepopup,
   ride,

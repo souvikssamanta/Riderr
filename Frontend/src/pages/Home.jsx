@@ -83,6 +83,7 @@ function Home() {
   //----submithandler----
   const submitHandler = (e) => {
     e.preventDefault();
+   
   };
 
   //--for pickup location---
@@ -179,12 +180,15 @@ function Home() {
           padding: 20,
           opacity: "1",
         });
+
+        
       } else {
         gsap.to(vehicleRef.current, {
           opacity: 0,
           height: "0%",
         });
       }
+      
     },
     [transport, pickup]
   );

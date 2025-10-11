@@ -46,7 +46,7 @@ const captainSchema = new mongoose.Schema({
     License: {
       type: String,
       required: true,
-      minlength: [3, "Color must be at least 3 characters long"],
+      minlength: [3, "License must be at least 3 characters long"],
     },
     plate: {
       type: String,

@@ -51,7 +51,6 @@ const expectedSignature=crypto.createHmac("sha256",process.env.RAZORPAY_KEY_SECR
 console.log("expectedSignature",expectedSignature);
 console.log("razorpay_signature",razorpay_signature);
 const isAuthentic = razorpay_signature === expectedSignature;
-
 if(isAuthentic){
 
 return  res.status(200).json({ success: true});

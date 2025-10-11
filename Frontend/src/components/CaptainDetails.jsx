@@ -93,6 +93,8 @@ const CaptainDetails = () => {
               </div>
             </div>
           </div>
+
+          
         </div>
       </div>
     </motion.div>

@@ -27,6 +27,7 @@
     "nodemailer": "^7.0.5",
     "razorpay": "^2.9.6",
     "react-hot-toast": "^2.5.2",
+    
     "socket.io": "^4.8.1"
   }
 }
