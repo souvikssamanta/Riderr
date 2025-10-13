@@ -112,7 +112,115 @@ export default RidePopup;
 
 
 
+// import React from "react";
+// import { motion } from "framer-motion";
+// import {
+//   FaCheck,
+//   FaTimes,
+//   FaUserFriends,
+//   FaMapMarkerAlt,
+//   FaMoneyBillWave,
+// } from "react-icons/fa";
 
+// const RidePopup = ({
+//   setRidePopup,
+//   ride,
+//   confirmRide,
+//   setConfirmRidePopup,
+// }) => {
+//   return (
+//     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
+//       <motion.div
+//         initial={{ opacity: 0, scale: 0.95 }}
+//         animate={{ opacity: 1, scale: 1 }}
+//         exit={{ opacity: 0, scale: 0.95 }}
+//         className="bg-white rounded-xl shadow-lg max-w-sm w-full overflow-hidden"
+//       >
+//         {/* Header */}
+//         <div className="bg-slate-800 px-6 py-4 border-b border-slate-200">
+//           <div className="flex items-center justify-between">
+//             <h2 className="text-lg font-semibold text-white">Ride Request</h2>
+//             <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse" />
+//           </div>
+//           <p className="text-slate-300 text-sm mt-1">New passenger request</p>
+//         </div>
+
+//         {/* Content */}
+//         <div className="p-6 space-y-6">
+//           {/* Location Info */}
+//           <div className="space-y-4">
+//             <div className="flex items-start gap-3">
+//               <div className="bg-blue-50 p-2 rounded-lg">
+//                 <FaMapMarkerAlt className="text-blue-600" size={16} />
+//               </div>
+//               <div className="flex-1">
+//                 <p className="text-slate-500 text-sm font-medium">Pickup</p>
+//                 <p className="text-slate-800 font-medium leading-tight">
+//                   {ride?.pickup || "Not specified"}
+//                 </p>
+//               </div>
+//             </div>
+
+//             <div className="flex items-start gap-3">
+//               <div className="bg-green-50 p-2 rounded-lg">
+//                 <FaMapMarkerAlt className="text-green-600" size={16} />
+//               </div>
+//               <div className="flex-1">
+//                 <p className="text-slate-500 text-sm font-medium">
+//                   Destination
+//                 </p>
+//                 <p className="text-slate-800 font-medium leading-tight">
+//                   {ride?.destination || "Not specified"}
+//                 </p>
+//               </div>
+//             </div>
+//           </div>
+
+//           {/* Fare and Passengers */}
+//           <div className="grid grid-cols-2 gap-4">
+//             <div className="bg-slate-50 rounded-lg p-3 text-center">
+//               <FaMoneyBillWave className="text-green-600 mx-auto mb-2" />
+//               <p className="text-slate-500 text-sm">Fare</p>
+//               <p className="font-semibold text-slate-800">
+//                 ₹{ride?.fare || "--"}
+//               </p>
+//             </div>
+//             <div className="bg-slate-50 rounded-lg p-3 text-center">
+//               <FaUserFriends className="text-blue-600 mx-auto mb-2" />
+//               <p className="text-slate-500 text-sm">Passengers</p>
+//               <p className="font-semibold text-slate-800">2</p>
+//             </div>
+//           </div>
+//         </div>
+
+//         {/* Action Buttons */}
+//         <div className="px-6 pb-6">
+//           <div className="flex gap-3">
+//             <button
+//               onClick={() => setRidePopup(false)}
+//               className="flex-1 flex items-center justify-center gap-2 py-3 text-slate-600 font-medium hover:bg-slate-100 transition-colors border border-slate-300 rounded-lg"
+//             >
+//               <FaTimes size={14} />
+//               Decline
+//             </button>
+//             <button
+//               onClick={() => {
+//                 confirmRide();
+//                 setConfirmRidePopup(true);
+//               }}
+//               className="flex-1 flex items-center justify-center gap-2 py-3 bg-slate-800 text-white font-medium hover:bg-slate-700 transition-colors rounded-lg"
+//             >
+//               <FaCheck size={14} />
+//               Accept
+//             </button>
+//           </div>
+//         </div>
+//       </motion.div>
+//     </div>
+//   );
+// };
+
+// export default RidePopup;
 
 
 

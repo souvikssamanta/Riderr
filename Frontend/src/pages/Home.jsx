@@ -60,7 +60,7 @@ function Home() {
       toast.error("Ride has been canceled by the captain.");
       setDriver(false);
       setWaitforDriver(false);
-      navigate("/login");
+      navigate("/home");
     };
 
     const handleRideStarted = (ride) => {
@@ -341,7 +341,7 @@ function Home() {
             {/* Pickup Location */}
             <div className="flex justify-start gap-2 w-full max-w-md group relative">
               <span className="mt-7 ml-1 text-2xl text-white group-hover:scale-125 transition-transform">
-                <i className="ri-focus-3-line"></i>
+                <i className="ri-focus-3-line text-black"></i>
               </span>
               <input
                 className="w-full bg-white/90 px-5 py-2 mt-3 rounded-xl  text-lg font-semibold   shadow-md hover:shadow-lg"
@@ -364,14 +364,14 @@ function Home() {
                 onClick={() => swappickupanddestination()}
                 className="w-10 h-10 rounded-full bg-white flex items-center justify-center border-2 border-blue-500 text-xl text-blue-500 hover:bg-blue-500 hover:text-white hover:rotate-180 transition-all duration-300 shadow-md hover:shadow-lg"
               >
-                <i className="ri-arrow-up-down-line"></i>
+                <i className="ri-arrow-up-down-line text-black"></i>
               </button>
             </div>
 
             {/* Destination */}
             <div className="flex justify-start gap-2 w-full max-w-md group relative">
               <p className="mt-8 text-2xl ml-1 text-white group-hover:scale-125 transition-transform">
-                <i className="ri-map-pin-range-line"></i>
+                <i className="ri-map-pin-range-line text-black"></i>
               </p>
               <input
                 className="w-full bg-white/90 px-5 py-1 mt-2 rounded-xl text-lg  font-semibold  shadow-md hover:shadow-lg"
@@ -457,7 +457,7 @@ function Home() {
 
         <div
           ref={waitforDriverRef}
-          className="h-full w-full flex justify-center absolute bg-white"
+          className="h-[1400px] w-full flex justify-center absolute bg-white"
         >
           <WaitforDriver
             setWaitforDriver={setWaitforDriver}
@@ -470,3 +470,5 @@ function Home() {
 }
 
 export default Home;
+
+

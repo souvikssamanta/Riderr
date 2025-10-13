@@ -1,15 +1,25 @@
 
 
+
 import React, { useState, useContext } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { UserDataContext } from "../context/UserContext";
-import Logo from "../assets/RideLogo.png";
-import { GoogleLogin } from "@react-oauth/google";
 import { toast } from "react-hot-toast";
 import { signInWithPopup } from "firebase/auth";
 import { auth, provider } from "../../utils/Firebase";
-
+import { motion } from "framer-motion";
+import {
+  FiMail,
+  FiLock,
+  FiUser,
+  FiArrowRight,
+  FiCheck,
+  FiStar,
+  FiShield,
+  FiZap,
+} from "react-icons/fi";
+import { FcGoogle } from "react-icons/fc";
 
 function UserSignup() {
   const [formData, setFormData] = useState({
@@ -18,6 +28,7 @@ function UserSignup() {
     email: "",
     password: "",
   });
+  const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
   const { setUser } = useContext(UserDataContext);
 
@@ -31,6 +42,8 @@ function UserSignup() {
 
   const submitHandler = async (e) => {
     e.preventDefault();
+    setIsLoading(true);
+
     const newUser = {
       fullname: {
         firstname: formData.firstname,
@@ -49,11 +62,13 @@ function UserSignup() {
         const data = response.data;
         setUser(data.user);
         localStorage.setItem("token", data.token);
-        toast.success("Signed up successfully");
+        toast.success("Welcome to RideShare! 🎉");
         navigate("/home");
       }
     } catch (error) {
       toast.error(error.response?.data?.message || "Signup failed");
+    } finally {
+      setIsLoading(false);
     }
 
     setFormData({
@@ -64,195 +79,289 @@ function UserSignup() {
     });
   };
 
-//
-const googleSignup=async()=>{
+  const googleSignup = async () => {
+    try {
+      const data = await signInWithPopup(auth, provider);
+      let user = data.user;
+      let name = user.displayName;
+      const parts = name.trim().split(" ");
+      let firstname = parts[0];
+      let lastname = parts[1];
+      let email = user.email;
+      const newUser = {
+        firstname,
+        lastname,
+        email,
+      };
+      const response = await axios.post(
+        `${import.meta.env.VITE_BACKEND_URL}/users/google-register`,
+        newUser
+      );
 
-  try{
-    const data=await signInWithPopup(auth,provider)
-    let user=data.user
-    let name=user.displayName
-    const parts=name.trim().split(" ")
-    let firstname=parts[0]
-    let lastname=parts[1]
-    let email=user.email
-const newUser = {
- 
-    firstname,
-    lastname,
-  
-    email
-
-};
-    const response = await axios.post(
-      `${import.meta.env.VITE_BACKEND_URL}/users/google-register`,
-      newUser
-    );
-
- if (response.status === 201) {
-   const googledata = response.data;
-   setUser(data.user);
-   localStorage.setItem("token", googledata.token);
-   toast.success("Signed up successfully");
-   navigate("/home");
- }   
-  }
-  catch(error){
-    console.error("Google signup failed", error);
-    toast.error("Google signup failed");
-  }
-}
+      if (response.status === 201) {
+        const googledata = response.data;
+        setUser(googledata.user);
+        localStorage.setItem("token", googledata.token);
+        toast.success("Welcome to RideShare! 🎉");
+        navigate("/home");
+      }
+    } catch (error) {
+      console.error("Google signup failed", error);
+      toast.error("Google signup failed");
+    }
+  };
 
   return (
-    <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4">
-      <div className="hidden lg:flex lg:w-1/2 lg:justify-center lg:items-center lg:pr-8">
-        <img
-          src="https://img.freepik.com/free-vector/personal-settings-concept-illustration_114360-2659.jpg?semt=ais_hybrid&w=740"
-          alt="Signup illustration"
-          className="max-w-md rounded-lg shadow-xl"
-        />
+    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 flex items-center justify-center p-4">
+      {/* Background Pattern */}
+      <div className="absolute inset-0 opacity-10">
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_1px_1px,rgba(255,255,255,0.15)_1px,transparent_0)] bg-[length:20px_20px]"></div>
       </div>
 
-      <div className="w-full max-w-md lg:w-1/2 lg:max-w-lg">
-        <div className="bg-white py-8 px-4 shadow sm:rounded-lg sm:px-10">
-         
-
-          <h2 className="mt-6 text-2xl font-bold text-center text-gray-800">
-            Create your account
-          </h2>
-          <p className="mt-2 text-center text-sm text-gray-600">
-            Join us today!
-          </p>
-
-          <form className="mt-8 space-y-6" onSubmit={submitHandler}>
-            <div className="grid grid-cols-1 gap-y-4 gap-x-6 sm:grid-cols-2">
-              <div>
-                <label
-                  htmlFor="firstname"
-                  className="block text-sm font-medium text-gray-700"
-                >
-                  First name
-                </label>
-                <input
-                  required
-                  id="firstname"
-                  type="text"
-                  value={formData.firstname}
-                  onChange={handleChange}
-                  className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-purple-500 focus:border-purple-500"
-                  placeholder="John"
-                />
+      <div className="w-full max-w-6xl flex flex-col lg:flex-row items-center justify-center gap-12 z-10">
+        {/* Left Section - Brand & Benefits */}
+        <motion.div
+          initial={{ opacity: 0, x: -50 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ duration: 0.6 }}
+          className="w-full lg:w-1/2 text-center lg:text-left"
+        >
+          <div className="max-w-md mx-auto lg:mx-0">
+            {/* Brand */}
+            <div className="inline-flex items-center gap-3 mb-8">
+              <div className="w-10 h-10 bg-gradient-to-r from-blue-500 to-purple-600 rounded-xl flex items-center justify-center">
+                <span className="text-white font-bold text-lg">R</span>
               </div>
-              <div>
-                <label
-                  htmlFor="lastname"
-                  className="block text-sm font-medium text-gray-700"
-                >
-                  Last name
-                </label>
-                <input
-                  required
-                  id="lastname"
-                  type="text"
-                  value={formData.lastname}
-                  onChange={handleChange}
-                  className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-purple-500 focus:border-purple-500"
-                  placeholder="Doe"
-                />
-              </div>
+              <span className="text-white text-xl font-semibold">
+                RideShare
+              </span>
             </div>
 
-            <div>
-              <label
-                htmlFor="email"
-                className="block text-sm font-medium text-gray-700"
-              >
-                Email address
-              </label>
-              <input
-                required
-                id="email"
-                type="email"
-                value={formData.email}
-                onChange={handleChange}
-                className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-purple-500 focus:border-purple-500"
-                placeholder="email@example.com"
-              />
-            </div>
-
-            <div>
-              <label
-                htmlFor="password"
-                className="block text-sm font-medium text-gray-700"
-              >
-                Password
-              </label>
-              <input
-                required
-                id="password"
-                type="password"
-                value={formData.password}
-                onChange={handleChange}
-                className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-purple-500 focus:border-purple-500"
-                placeholder="••••••••"
-              />
-            </div>
-
-            <div>
-              <button
-                type="submit"
-                className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-purple-600 hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500"
-              >
-                Sign up
-              </button>
-            </div>
-          </form>
-
-          <div className="mt-6">
-            <div className="relative">
-              <div className="absolute inset-0 flex items-center">
-                <div className="w-full border-t border-gray-300"></div>
-              </div>
-              <div className="relative flex justify-center text-sm">
-                <span className="px-2 bg-white text-gray-500">
-                  Or continue with
-                </span>
-              </div>
-            </div>
-
-            <div className="flex justify-center items-center">
-              <button
-                onClick={googleSignup}
-                className="mt-6 w-full max-w-xs py-3 px-6 flex items-center justify-center gap-3 bg-white border border-gray-300 rounded-lg shadow-sm hover:shadow-md transition-shadow duration-200 focus:outline-none focus:ring-2 focus:ring-offset-1 focus:ring-blue-500"
-              >
-                <i className="ri-google-fill text-blue-600"></i>
-                <span className="text-gray-700 font-medium text-sm sm:text-base">
-                  Sign up with Google
-                </span>
-              </button>
-            </div>
-          </div>
-
-          <div className="mt-6 text-center">
-            <p className="text-sm text-gray-600">
-              Already have an account?{" "}
-              <Link
-                to="/login"
-                className="font-medium text-purple-600 hover:text-purple-500"
-              >
-                Log in
-              </Link>
+            {/* Hero Section */}
+            <h1 className="text-4xl lg:text-5xl font-bold text-white mb-6">
+              Start Your{" "}
+              <span className="bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">
+                Journey
+              </span>
+            </h1>
+            <p className="text-slate-300 text-lg mb-8 leading-relaxed">
+              Join thousands of users who trust RideShare for safe, reliable,
+              and affordable rides across the city.
             </p>
+
+            {/* Benefits Grid */}
+            <div className="space-y-4 mb-8">
+              {[
+                { icon: FiZap, text: "Instant ride matching" },
+                { icon: FiShield, text: "Secure & verified drivers" },
+                { icon: FiStar, text: "5-star rated service" },
+                { icon: FiCheck, text: "24/7 customer support" },
+              ].map((benefit, index) => (
+                <motion.div
+                  key={index}
+                  initial={{ opacity: 0, x: -20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ duration: 0.5, delay: index * 0.1 }}
+                  className="flex items-center gap-3 text-slate-300"
+                >
+                  <div className="w-8 h-8 bg-blue-500/20 rounded-lg flex items-center justify-center">
+                    <benefit.icon className="text-blue-400" />
+                  </div>
+                  <span className="text-sm">{benefit.text}</span>
+                </motion.div>
+              ))}
+            </div>
+
+            {/* Testimonial */}
+            <div className="bg-white/5 rounded-xl p-4 border border-white/10">
+              <p className="text-slate-300 text-sm italic mb-2">
+                "RideShare made my daily commute so much easier. The app is
+                intuitive and drivers are always professional!"
+              </p>
+              <div className="flex items-center gap-2">
+                <div className="w-6 h-6 bg-gradient-to-r from-blue-400 to-purple-400 rounded-full"></div>
+                <span className="text-slate-400 text-sm">Sarah M.</span>
+              </div>
+            </div>
           </div>
-        </div>
+        </motion.div>
+
+        {/* Right Section - Signup Form */}
+        <motion.div
+          initial={{ opacity: 0, x: 50 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ duration: 0.6 }}
+          className="w-full max-w-md"
+        >
+          <div className="bg-white/10 backdrop-blur-xl rounded-2xl border border-white/20 shadow-2xl overflow-hidden">
+            <div className="p-8">
+              {/* Header */}
+              <div className="text-center mb-8">
+                <div className="w-16 h-16 bg-gradient-to-r from-blue-500 to-purple-600 rounded-2xl flex items-center justify-center mx-auto mb-4">
+                  <FiUser className="text-white text-2xl" />
+                </div>
+                <h2 className="text-2xl font-bold text-white mb-2">
+                  Create Account
+                </h2>
+                <p className="text-slate-300">Join RideShare today</p>
+              </div>
+
+              <form onSubmit={submitHandler} className="space-y-6">
+                {/* Name Fields */}
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="space-y-2">
+                    <label
+                      htmlFor="firstname"
+                      className="block text-sm font-medium text-slate-300"
+                    >
+                      First Name
+                    </label>
+                    <div className="relative">
+                      <FiUser className="absolute left-3 top-1/2 transform -translate-y-1/2 text-slate-400 text-sm" />
+                      <input
+                        required
+                        id="firstname"
+                        type="text"
+                        value={formData.firstname}
+                        onChange={handleChange}
+                        className="w-full pl-10 pr-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200"
+                        placeholder="John"
+                      />
+                    </div>
+                  </div>
+                  <div className="space-y-2">
+                    <label
+                      htmlFor="lastname"
+                      className="block text-sm font-medium text-slate-300"
+                    >
+                      Last Name
+                    </label>
+                    <input
+                      required
+                      id="lastname"
+                      type="text"
+                      value={formData.lastname}
+                      onChange={handleChange}
+                      className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200"
+                      placeholder="Doe"
+                    />
+                  </div>
+                </div>
+
+                {/* Email Field */}
+                <div className="space-y-2">
+                  <label
+                    htmlFor="email"
+                    className="block text-sm font-medium text-slate-300"
+                  >
+                    Email Address
+                  </label>
+                  <div className="relative">
+                    <FiMail className="absolute left-4 top-1/2 transform -translate-y-1/2 text-slate-400 text-lg" />
+                    <input
+                      required
+                      id="email"
+                      type="email"
+                      value={formData.email}
+                      onChange={handleChange}
+                      className="w-full pl-12 pr-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200"
+                      placeholder="your@email.com"
+                    />
+                  </div>
+                </div>
+
+                {/* Password Field */}
+                <div className="space-y-2">
+                  <label
+                    htmlFor="password"
+                    className="block text-sm font-medium text-slate-300"
+                  >
+                    Password
+                  </label>
+                  <div className="relative">
+                    <FiLock className="absolute left-4 top-1/2 transform -translate-y-1/2 text-slate-400 text-lg" />
+                    <input
+                      required
+                      id="password"
+                      type="password"
+                      value={formData.password}
+                      onChange={handleChange}
+                      className="w-full pl-12 pr-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200"
+                      placeholder="••••••••"
+                    />
+                  </div>
+                </div>
+
+                {/* Submit Button */}
+                <motion.button
+                  whileHover={{ scale: 1.02 }}
+                  whileTap={{ scale: 0.98 }}
+                  type="submit"
+                  disabled={isLoading}
+                  className={`w-full py-3 px-4 rounded-xl font-medium text-white transition-all duration-200 flex items-center justify-center ${
+                    isLoading
+                      ? "bg-blue-400 cursor-not-allowed"
+                      : "bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 shadow-lg hover:shadow-xl"
+                  }`}
+                >
+                  {isLoading ? (
+                    <>
+                      <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin mr-2"></div>
+                      Creating Account...
+                    </>
+                  ) : (
+                    <>
+                      Create Account <FiArrowRight className="ml-2" />
+                    </>
+                  )}
+                </motion.button>
+              </form>
+
+              {/* Social Signup */}
+              <div className="mt-8">
+                <div className="relative mb-6">
+                  <div className="absolute inset-0 flex items-center">
+                    <div className="w-full border-t border-white/20"></div>
+                  </div>
+                  <div className="relative flex justify-center">
+                    <span className="px-4 bg-transparent text-sm text-slate-400">
+                      Or sign up with
+                    </span>
+                  </div>
+                </div>
+
+                <motion.button
+                  whileHover={{ scale: 1.02 }}
+                  whileTap={{ scale: 0.98 }}
+                  onClick={googleSignup}
+                  className="w-full flex items-center justify-center gap-3 py-3 px-4 bg-white/5 border border-white/10 rounded-xl text-slate-300 hover:bg-white/10 transition-all duration-200 hover:border-white/20"
+                >
+                  <FcGoogle className="text-xl" />
+                  <span className="font-medium">Google</span>
+                </motion.button>
+              </div>
+
+              {/* Login Link */}
+              <div className="mt-8 text-center">
+                <p className="text-slate-400">
+                  Already have an account?{" "}
+                  <Link
+                    to="/login"
+                    className="font-medium text-blue-400 hover:text-blue-300 transition-colors"
+                  >
+                    Sign in here
+                  </Link>
+                </p>
+              </div>
+            </div>
+          </div>
+        </motion.div>
       </div>
     </div>
   );
 }
 
 export default UserSignup;
-
-
-
 
 
 

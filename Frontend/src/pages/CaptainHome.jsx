@@ -170,11 +170,11 @@ async function cancelRide() {
         </Link>
       </div>
       {/* ----image section-- */}
-      <div className="h-[46%]">
+      <div className="h-[36%]">
         <LiveTracking></LiveTracking>
       </div>
 
-      <div className="h-[54%] fixed bottom-0 w-full rounded-t-xl  ">
+      <div className="h-[64%] fixed bottom-0 w-full rounded-t-xl  ">
         <div ref={captaidetailsref} className=" h-full ">
           <CaptainDetails></CaptainDetails>
         </div>

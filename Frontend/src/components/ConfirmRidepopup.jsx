@@ -148,11 +148,3 @@ const ConfirmRidepopup = ({
 export default ConfirmRidepopup;
 
 
-
-
-
-
-
-
-
-

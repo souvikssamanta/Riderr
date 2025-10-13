@@ -15,15 +15,18 @@ import {
   FiEye,
   FiEyeOff,
   FiArrowRight,
+  FiUser,
+  FiMapPin,
+  FiDollarSign,
+  FiClock,
 } from "react-icons/fi";
-import { GoogleLogin } from "@react-oauth/google";
+import { FcGoogle } from "react-icons/fc";
 
 function CaptainLogin() {
   const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
-  const [rememberMe, setRememberMe] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const { setCaptain } = useContext(CaptainDataContext);
 
@@ -47,7 +50,7 @@ function CaptainLogin() {
         setCaptain(data.captain);
         localStorage.setItem("token", data.token);
         navigate("/captain-home");
-        toast.success("Logged in successfully");
+        toast.success("Welcome back, Captain!");
       }
     } catch (err) {
       console.error(err);
@@ -56,215 +59,283 @@ function CaptainLogin() {
       setIsLoading(false);
     }
   };
-const googleSignin = async () => {
-  try {
-    const data = await signInWithPopup(auth, provider);
-    let captain = data.user;
-    let name = captain.displayName;
-    const parts = name.trim().split(" ");
-    let firstname = parts[0];
-    let lastname = parts[1];
-    let email = captain.email;
-    const newCaptain = {
-      firstname,
-      lastname,
 
-      email,
-    };
-    const response = await axios.post(
-      `${import.meta.env.VITE_BACKEND_URL}/captains/google-login`,
-      newCaptain
-    );
+  const googleSignin = async () => {
+    try {
+      const data = await signInWithPopup(auth, provider);
+      let captain = data.user;
+      let name = captain.displayName;
+      const parts = name.trim().split(" ");
+      let firstname = parts[0];
+      let lastname = parts[1];
+      let email = captain.email;
+      const newCaptain = {
+        firstname,
+        lastname,
+        email,
+      };
+      const response = await axios.post(
+        `${import.meta.env.VITE_BACKEND_URL}/captains/google-login`,
+        newCaptain
+      );
 
-    if (response.status === 201) {
-      const googledata = response.data;
-      setCaptain(googledata.user);
-      localStorage.setItem("token", googledata.token);
-      toast.success("Signed in successfully");
-      navigate("/captain-home");
+      if (response.status === 201) {
+        const googledata = response.data;
+        setCaptain(googledata.user);
+        localStorage.setItem("token", googledata.token);
+        toast.success("Signed in successfully");
+        navigate("/captain-home");
+      }
+    } catch (error) {
+      console.error("Google signin failed", error);
+      toast.error("Google signin failed");
     }
-  } catch (error) {
-    console.error("Google signin failed", error);
-    toast.error("Google signin failed");
-  }
-};
+  };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-amber-50 to-white flex flex-col md:flex-row items-center justify-center p-2">
-      {/* Left Side - Illustration */}
-      <motion.div
-        initial={{ opacity: 0, x: -50 }}
-        animate={{ opacity: 1, x: 0 }}
-        transition={{ duration: 0.5 }}
-        className="hidden md:flex flex-col items-center justify-center w-1/2 p-8"
-      >
-        <div className="max-w-md">
-          <img
-            src="https://img.freepik.com/free-vector/delivery-service-with-masks-concept-illustration_114360-7853.jpg"
-            alt="Driver illustration"
-            className="w-full h-auto"
-          />
-          <h2 className="text-2xl font-bold text-gray-800 mt-6">
-            Welcome Back, Captain!
-          </h2>
-          <p className="text-gray-600 mt-2">
-            Log in to manage your rides and connect with passengers.
-          </p>
-        </div>
-      </motion.div>
+    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-blue-900 to-slate-900 flex items-center justify-center p-4">
+      {/* Background Pattern */}
+      <div className="absolute inset-0 opacity-10">
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_1px_1px,rgba(255,255,255,0.15)_1px,transparent_0)] bg-[length:20px_20px]"></div>
+      </div>
 
-      {/* Right Side - Login Form */}
-      <div className="w-full md:w-1/2 max-w-md bg-white rounded-2xl shadow-xl px-5 py-6 h-4xl">
-        <h1 className="text-3xl font-bold text-center text-gray-800 mb-2">
-          Sign In
-        </h1>
-        <p className="text-center text-gray-500 mb-5">
-          Enter your details to continue
-        </p>
-
-        <form onSubmit={submitHandler} className="space-y-6">
-          {/* Email Input */}
-          <div className="space-y-1">
-            <label
-              htmlFor="email"
-              className="text-sm font-medium text-gray-700"
-            >
-              Email
-            </label>
-            <div className="relative">
-              <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                <FiMail className="text-gray-400" />
+      <div className="w-full max-w-6xl flex flex-col lg:flex-row items-center justify-center gap-12 z-10">
+        {/* Left Section - Brand & Driver Features */}
+        <motion.div
+          initial={{ opacity: 0, x: -50 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ duration: 0.6 }}
+          className="w-full lg:w-1/2 text-center lg:text-left"
+        >
+          <div className="max-w-md mx-auto lg:mx-0">
+            {/* Brand */}
+            <div className="inline-flex items-center gap-3 mb-8">
+              <div className="w-12 h-12 bg-gradient-to-r from-amber-500 to-orange-600 rounded-xl flex items-center justify-center">
+                <FiUser className="text-white text-xl" />
               </div>
-              <input
-                id="email"
-                type="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                className="block w-full pl-10 pr-3 py-3 border border-gray-300 rounded-lg "
-                placeholder="your@email.com"
-                required
-              />
-            </div>
-          </div>
-
-          {/* Password Input */}
-          <div className="space-y-1">
-            <label
-              htmlFor="password"
-              className="text-sm font-medium text-gray-700"
-            >
-              Password
-            </label>
-            <div className="relative">
-              <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                <FiLock className="text-gray-400" />
-              </div>
-              <input
-                id="password"
-                type={showPassword ? "text" : "password"}
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                className="block w-full pl-10 pr-10 py-3 border border-gray-300 rounded-lg "
-                placeholder="••••••••"
-                required
-              />
-              <button
-                type="button"
-                className="absolute inset-y-0 right-0 pr-3 flex items-center"
-                onClick={() => setShowPassword(!showPassword)}
-              >
-                {showPassword ? (
-                  <FiEyeOff className="text-gray-400 hover:text-gray-600" />
-                ) : (
-                  <FiEye className="text-gray-400 hover:text-gray-600" />
-                )}
-              </button>
-            </div>
-          </div>
-
-          {/* Remember Me & Forgot Password */}
-          <div className="flex items-center justify-between">
-            <Link
-              to="/captain-forgetpassword"
-              className="text-sm text-amber-600 hover:text-amber-500"
-            >
-              Forgot password?
-            </Link>
-          </div>
-
-          {/* Submit Button */}
-          <button
-            type="submit"
-            disabled={isLoading}
-            className={`w-full flex justify-center items-center py-3 px-4 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-amber-600 hover:bg-amber-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-amber-500 transition-colors ${
-              isLoading ? "opacity-70 cursor-not-allowed" : ""
-            }`}
-          >
-            {isLoading ? (
-              "Signing in..."
-            ) : (
-              <>
-                Sign In <FiArrowRight className="ml-2" />
-              </>
-            )}
-          </button>
-
-          {/* Social Login */}
-        </form>
-
-        <div className="py-5">
-          <div className="relative">
-            <div className="absolute inset-0 flex items-center">
-              <div className="w-full border-t border-gray-300"></div>
-            </div>
-            <div className="relative flex justify-center text-sm">
-              <span className="px-2 bg-white text-gray-500">
-                Or continue with
+              <span className="text-white text-2xl font-bold">
+                RideShare Pro
               </span>
             </div>
-          </div>
 
-          <div className="flex justify-center items-center">
-            <button
-              onClick={googleSignin}
-              className="mt-6 w-full max-w-xs py-3 px-6 flex items-center justify-center gap-3 bg-white border border-gray-300 rounded-lg shadow-sm hover:shadow-md transition-shadow duration-200 focus:outline-none focus:ring-2 focus:ring-offset-1 focus:ring-blue-500"
-            >
-              <i className="ri-google-fill text-yellow-300"></i>
-              <span className="text-gray-700 font-medium text-sm sm:text-base">
-                Sign in with Google
+            {/* Hero Section */}
+            <h1 className="text-4xl lg:text-5xl font-bold text-white mb-6">
+              Drive with{" "}
+              <span className="bg-gradient-to-r from-amber-400 to-orange-400 bg-clip-text text-transparent">
+                Confidence
               </span>
-            </button>
-          </div>
-
-          {/* Sign Up Link */}
-          <div className="text-center text-sm text-gray-600 py-3">
-            <p>
-              New here?{" "}
-              <Link
-                to="/captain-signup"
-                className="font-medium text-amber-600 hover:text-amber-500"
-              >
-                Create an account
-              </Link>
+            </h1>
+            <p className="text-slate-300 text-lg mb-8 leading-relaxed">
+              Access your driver dashboard, manage your rides, and maximize your
+              earnings with our professional platform.
             </p>
-          </div>
-        </div>
 
-        <div className="text-center mt-5 text-lg px-2 py-2 bg-amber-200 rounded-2xl font-medium">
-          <Link to="/captain-logout" className="text-orange-500">
-            Logout
-          </Link>
-        </div>
+            {/* Driver Benefits */}
+            <div className="space-y-4 mb-8">
+              {[
+                {
+                  icon: FiDollarSign,
+                  text: "Higher earnings with surge pricing",
+                },
+                { icon: FiMapPin, text: "Smart route optimization" },
+                { icon: FiClock, text: "Flexible working hours" },
+                { icon: FiUser, text: "24/7 driver support" },
+              ].map((benefit, index) => (
+                <motion.div
+                  key={index}
+                  initial={{ opacity: 0, x: -20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ duration: 0.5, delay: index * 0.1 }}
+                  className="flex items-center gap-3 text-slate-300"
+                >
+                  <div className="w-8 h-8 bg-amber-500/20 rounded-lg flex items-center justify-center">
+                    <benefit.icon className="text-amber-400" />
+                  </div>
+                  <span className="text-sm">{benefit.text}</span>
+                </motion.div>
+              ))}
+            </div>
+
+            {/* Stats */}
+            <div className="flex gap-6 text-center">
+              <div>
+                <div className="text-2xl font-bold text-amber-400">4.8★</div>
+                <div className="text-slate-400 text-sm">Driver Rating</div>
+              </div>
+              <div>
+                <div className="text-2xl font-bold text-amber-400">$35+/hr</div>
+                <div className="text-slate-400 text-sm">Average Earnings</div>
+              </div>
+              <div>
+                <div className="text-2xl font-bold text-amber-400">24/7</div>
+                <div className="text-slate-400 text-sm">Support</div>
+              </div>
+            </div>
+          </div>
+        </motion.div>
+
+        {/* Right Section - Login Form */}
+        <motion.div
+          initial={{ opacity: 0, x: 50 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ duration: 0.6 }}
+          className="w-full max-w-md"
+        >
+          <div className="bg-white/10 backdrop-blur-xl rounded-2xl border border-white/20 shadow-2xl overflow-hidden">
+            <div className="p-8">
+              {/* Header */}
+              <div className="text-center mb-8">
+                <div className="w-16 h-16 bg-gradient-to-r from-amber-500 to-orange-600 rounded-2xl flex items-center justify-center mx-auto mb-4">
+                  <FiUser className="text-white text-2xl" />
+                </div>
+                <h2 className="text-2xl font-bold text-white mb-2">
+                  Captain Login
+                </h2>
+                <p className="text-slate-300">
+                  Sign in to your driver dashboard
+                </p>
+              </div>
+
+              <form onSubmit={submitHandler} className="space-y-6">
+                {/* Email Input */}
+                <div className="space-y-2">
+                  <label
+                    htmlFor="email"
+                    className="block text-sm font-medium text-slate-300"
+                  >
+                    Email Address
+                  </label>
+                  <div className="relative">
+                    <FiMail className="absolute left-4 top-1/2 transform -translate-y-1/2 text-slate-400 text-lg" />
+                    <input
+                      id="email"
+                      type="email"
+                      value={email}
+                      onChange={(e) => setEmail(e.target.value)}
+                      className="w-full pl-12 pr-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-amber-500 focus:border-transparent transition-all duration-200"
+                      placeholder="captain@email.com"
+                      required
+                    />
+                  </div>
+                </div>
+
+                {/* Password Input */}
+                <div className="space-y-2">
+                  <div className="flex justify-between items-center">
+                    <label
+                      htmlFor="password"
+                      className="block text-sm font-medium text-slate-300"
+                    >
+                      Password
+                    </label>
+                    <Link
+                      to="/captain-forgetpassword"
+                      className="text-sm text-amber-400 hover:text-amber-300 transition-colors"
+                    >
+                      Forgot password?
+                    </Link>
+                  </div>
+                  <div className="relative">
+                    <FiLock className="absolute left-4 top-1/2 transform -translate-y-1/2 text-slate-400 text-lg" />
+                    <input
+                      id="password"
+                      type={showPassword ? "text" : "password"}
+                      value={password}
+                      onChange={(e) => setPassword(e.target.value)}
+                      className="w-full pl-12 pr-12 py-3 bg-white/5 border border-white/10 rounded-xl text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-amber-500 focus:border-transparent transition-all duration-200"
+                      placeholder="••••••••"
+                      required
+                    />
+                    <button
+                      type="button"
+                      onClick={() => setShowPassword(!showPassword)}
+                      className="absolute right-4 top-1/2 transform -translate-y-1/2 text-slate-400 hover:text-slate-300 transition-colors"
+                    >
+                      {showPassword ? <FiEyeOff /> : <FiEye />}
+                    </button>
+                  </div>
+                </div>
+
+                {/* Submit Button */}
+                <motion.button
+                  whileHover={{ scale: 1.02 }}
+                  whileTap={{ scale: 0.98 }}
+                  type="submit"
+                  disabled={isLoading}
+                  className={`w-full py-3 px-4 rounded-xl font-medium text-white transition-all duration-200 flex items-center justify-center ${
+                    isLoading
+                      ? "bg-amber-400 cursor-not-allowed"
+                      : "bg-gradient-to-r from-amber-500 to-orange-600 hover:from-amber-600 hover:to-orange-700 shadow-lg hover:shadow-xl"
+                  }`}
+                >
+                  {isLoading ? (
+                    <>
+                      <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin mr-2"></div>
+                      Signing in...
+                    </>
+                  ) : (
+                    <>
+                      Sign In <FiArrowRight className="ml-2" />
+                    </>
+                  )}
+                </motion.button>
+              </form>
+
+              {/* Social Login */}
+              <div className="mt-8">
+                <div className="relative mb-6">
+                  <div className="absolute inset-0 flex items-center">
+                    <div className="w-full border-t border-white/20"></div>
+                  </div>
+                  <div className="relative flex justify-center">
+                    <span className="px-4 bg-transparent text-sm text-slate-400">
+                      Or continue with
+                    </span>
+                  </div>
+                </div>
+
+                <motion.button
+                  whileHover={{ scale: 1.02 }}
+                  whileTap={{ scale: 0.98 }}
+                  onClick={googleSignin}
+                  className="w-full flex items-center justify-center gap-3 py-3 px-4 bg-white/5 border border-white/10 rounded-xl text-slate-300 hover:bg-white/10 transition-all duration-200 hover:border-white/20"
+                >
+                  <FcGoogle className="text-xl" />
+                  <span className="font-medium">Google</span>
+                </motion.button>
+              </div>
+
+              {/* Sign Up Link */}
+              <div className="mt-8 text-center">
+                <p className="text-slate-400">
+                  New to our platform?{" "}
+                  <Link
+                    to="/captain-signup"
+                    className="font-medium text-amber-400 hover:text-amber-300 transition-colors"
+                  >
+                    Become a Captain
+                  </Link>
+                </p>
+              </div>
+
+              {/* Alternative Login */}
+              <div className="mt-6 p-4 bg-amber-500/10 rounded-xl border border-amber-400/20">
+                <Link
+                  to="/login"
+                  className="flex items-center justify-center text-amber-400 hover:text-amber-300 transition-colors font-medium text-sm"
+                >
+                  Looking for rider login? Click here
+                </Link>
+              </div>
+            </div>
+          </div>
+        </motion.div>
       </div>
     </div>
   );
 }
 
 export default CaptainLogin;
-
-
-
-
 
 
 

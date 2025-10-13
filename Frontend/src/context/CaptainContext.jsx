@@ -1,5 +1,6 @@
-import React, { createContext } from "react";
+import React, { createContext, useEffect } from "react";
 import { useState } from "react";
+import axios from "axios";
 export const CaptainDataContext = createContext();
 
 function Captaincontext({ children }) {
@@ -10,13 +11,40 @@ function Captaincontext({ children }) {
   //   setCaptain(captainData);
   // };
 
-  const value = {
-    captain,
-    setCaptain,
-    isLoading,
-    setIsLoading,
-    //updateCaptain,
-  };
+  
+
+const currentCaptain=async()=>{
+
+    const response = await axios.get(
+      `${import.meta.env.VITE_BACKEND_URL}/captains/profile`,
+      {
+        headers:{
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+      }
+    );
+    if(response.status==200){
+      setCaptain(response.data.captain);
+     
+    }
+
+}
+
+useEffect(()=>{
+  currentCaptain();
+},[])
+
+
+const value = {
+  captain,
+  setCaptain,
+  isLoading,
+  setIsLoading,
+  currentCaptain
+};
+
+
+
 
   return (
     <CaptainDataContext.Provider value={value}>

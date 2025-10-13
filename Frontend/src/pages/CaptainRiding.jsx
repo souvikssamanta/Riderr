@@ -58,7 +58,7 @@ if(response.request.status===200){
     <div className="h-screen relative flex flex-col justify-end">
       <div className="fixed p-6 top-0 flex items-center justify-between w-screen">
         <Link
-          to="/captain-login"
+          to="/captain-home"
           className=" h-10 w-10 bg-white flex items-center justify-center rounded-full"
         >
           <i className="text-2xl font-medium ri-logout-box-r-line"></i>

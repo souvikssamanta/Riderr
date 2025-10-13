@@ -99,13 +99,3 @@ export default FinishRide;
 
 
 
-
-
-
-
-
-
-
-
-
-
