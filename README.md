@@ -46,7 +46,7 @@ The project demonstrates modern web development skills — from backend REST API
 ✅ **Driver Dashboard**  
 - Manage availability, ride history, and incoming requests.  
 
-✅ **Payment Integration (optional)**  
+✅ **Payment Integration **  
 - Integrated with Stripe (or Razorpay) for secure payments.  
 
 ✅ **Modern UI/UX**  
@@ -69,21 +69,19 @@ The project demonstrates modern web development skills — from backend REST API
 
 ---
 
-## ⚙️ Installation & Setup
 
-Follow these steps to set up the project locally 👇
-
-### 1️⃣ Clone the Repository
-```bash
-git clone https://github.com/your-username/rideease.git
-cd rideease
 Open in Browser
-
+###
 Visit 👉 https://riderr-1.onrender.com/
 
 
+🧑‍💻 Author
 
+👤 Souvik Samanta
+💼 MERN Stack Developer | Passionate about scalable web apps
 
+⭐ Show Your Support
 
+If you like this project, consider giving it a ⭐ on GitHub — it motivates me to build more cool stuff! 🙌
 
-
+<p align="center"> Built with ❤️ using the MERN Stack </p> ```
