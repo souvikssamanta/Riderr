@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="https://img.icons8.com/?size=512&id=12277&format=png" width="120" alt="RideEase Logo" />
+  <img src="https://raw.githubusercontent.com/souvikssamanta/Riderr/main/assets/home.png" alt="Souvik Portfolio Banner" width="100%" />
 </p>
 
 <h1 align="center">🚗 Riderr — Your Smart Ride Sharing App</h1>
