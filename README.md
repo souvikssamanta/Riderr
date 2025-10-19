@@ -2,7 +2,7 @@
   <img src="https://img.icons8.com/?size=512&id=12277&format=png" width="120" alt="RideEase Logo" />
 </p>
 
-<h1 align="center">🚗 RideEase — Your Smart Ride Sharing App</h1>
+<h1 align="center">🚗 Riderr — Your Smart Ride Sharing App</h1>
 
 <p align="center">
   A modern Uber-like ride-sharing platform built with the MERN Stack.
@@ -58,13 +58,13 @@ The project demonstrates modern web development skills — from backend REST API
 
 | Category | Technology |
 |-----------|-------------|
-| **Frontend** | React.js, Redux Toolkit, Tailwind CSS |
+| **Frontend** | React.js,GSAP, Tailwind CSS |
 | **Backend** | Node.js, Express.js |
 | **Database** | MongoDB with Mongoose |
 | **Authentication** | JWT (JSON Web Token), bcrypt |
 | **Maps & Geo** | Google Maps API, Geolocation API |
 | **Real-time** | Socket.io |
-| **Deployment** | Render / Vercel / Railway |
+| **Deployment** | Render  |
 | **Version Control** | Git & GitHub |
 
 ---
@@ -77,3 +77,16 @@ Follow these steps to set up the project locally 👇
 ```bash
 git clone https://github.com/your-username/rideease.git
 cd rideease
+Open in Browser
+
+Visit 👉 https://riderr-1.onrender.com/
+
+
+
+| User Home                                                             | Ride Booking                                                      | Driver Dashboard                                                     |
+| --------------------------------------------------------------------- | ----------------------------------------------------------------- | -------------------------------------------------------------------- |
+| ![User Home](https://via.placeholder.com/300x180?text=User+Dashboard) | ![Booking](https://via.placeholder.com/300x180?text=Ride+Booking) | ![Driver](https://via.placeholder.com/300x180?text=Driver+Dashboard) |
+
+
+
+
