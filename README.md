@@ -10,15 +10,6 @@
   <strong>Book rides. Connect with drivers. Travel smarter.</strong>
 </p>
 
-<p align="center">
-  <a href="#✨-features">Features</a> •
-  <a href="#🧠-tech-stack">Tech Stack</a> •
-  <a href="#⚙️-installation--setup">Installation</a> •
-  <a href="#📸-screenshots">Screenshots</a> •
-  <a href="#🚀-future-updates">Future Updates</a>
-</p>
-
----
 
 ## 🧭 Overview
 
@@ -47,7 +38,7 @@ The project demonstrates modern web development skills — from backend REST API
 - Manage availability, ride history, and incoming requests.  
 
 ✅ **Payment Integration **  
-- Integrated with Stripe (or Razorpay) for secure payments.  
+- Integrated with Razorpay for secure payments.  
 
 ✅ **Modern UI/UX**  
 - Responsive, clean, and intuitive interface built with React + Tailwind CSS.  
@@ -68,6 +59,7 @@ The project demonstrates modern web development skills — from backend REST API
 | **Version Control** | Git & GitHub |
 
 ---
+
 
 
 Open in Browser
