@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="https://raw.githubusercontent.com/souvikssamanta/Riderr/main/assets/home.png" alt="Souvik Portfolio Banner" width="100%" />
+  <img src="https://raw.githubusercontent.com/souvikssamanta/Riderr/main/assets/home.jpeg" alt="Souvik Portfolio Banner" width="100%" />
 </p>
 
 <h1 align="center">🚗 Riderr — Your Smart Ride Sharing App</h1>
@@ -83,9 +83,6 @@ Visit 👉 https://riderr-1.onrender.com/
 
 
 
-| User Home                                                             | Ride Booking                                                      | Driver Dashboard                                                     |
-| --------------------------------------------------------------------- | ----------------------------------------------------------------- | -------------------------------------------------------------------- |
-| ![User Home](https://via.placeholder.com/300x180?text=User+Dashboard) | ![Booking](https://via.placeholder.com/300x180?text=Ride+Booking) | ![Driver](https://via.placeholder.com/300x180?text=Driver+Dashboard) |
 
 
 
